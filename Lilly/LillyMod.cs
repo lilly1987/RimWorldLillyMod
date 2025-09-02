@@ -8,11 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-// https://visualstudio.microsoft.com/ko/downloads/
-// https://dnspy.org/
-// https://rimworldwiki.com/wiki/Modding_Tutorials/Setting_up_a_solution
-// https://rimworldwiki.com/wiki/Modding_Tutorials/Hello_World
-
 namespace Lilly
 {
     [StaticConstructorOnStartup]
