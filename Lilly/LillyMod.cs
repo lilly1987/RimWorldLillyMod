@@ -22,7 +22,7 @@ namespace Lilly
             try
             {
                 harmony = new Harmony(HarmonyId);
-                harmony.PatchAll(typeof(LillyPatch) );
+                harmony.PatchAll();
             }
             catch (Exception e)
             {
