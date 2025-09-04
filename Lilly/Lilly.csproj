@@ -105,6 +105,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeepDrill.cs" />
+    <Compile Include="TradeAll.cs" />
     <Compile Include="LillyMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
