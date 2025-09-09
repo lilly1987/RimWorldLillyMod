@@ -11,6 +11,7 @@ using static HarmonyLib.Code;
 
 namespace Lilly
 {
+    // 정상 작동
     [StaticConstructorOnStartup]
     public static class LillyMod_ResourcePodGenerate
     {
@@ -19,6 +20,7 @@ namespace Lilly
 
         static LillyMod_ResourcePodGenerate()
         {
+            //return;
             Log.Warning($"+++ {HarmonyId} loading +++");
 
             harmony = new Harmony(HarmonyId);
@@ -52,8 +54,12 @@ namespace Lilly
             public static IEnumerable<CodeInstruction> Transpile(IEnumerable<CodeInstruction> instructions)
             {
                 Log.Warning($"+++ {HarmonyId} Transpile +++");
-                foreach (var instruction in instructions)
+                var codes = new List<CodeInstruction>(instructions);
+                var newCodes = new List<CodeInstruction>();
+
+                for (int i = 0; i < codes.Count; i++)
                 {
+                    var instruction = codes[i];
                     try
                     {
                         // 총 시장가치 합계
@@ -93,7 +99,7 @@ namespace Lilly
                             Log.Warning($"+++ {HarmonyId} succ5 +++");
                             instruction.opcode = OpCodes.Ldc_I4;
                             instruction.operand = 100;
-                        }
+                        }                        
                     }
                     catch (Exception e)
                     {
@@ -102,8 +108,23 @@ namespace Lilly
                         Log.Error($"+++ {HarmonyId} Transpile Fail +++");
                     }
 
-                    yield return instruction;
+                    newCodes.Add(instruction);
+                    //Log.Warning($"+++ {instruction.opcode} : {instruction.operand} +++");
+
+                    // 종류 다양화
+                    if (instruction.opcode == OpCodes.Stloc_3)
+                    {
+                        Log.Warning($"+++ {HarmonyId} succ6 +++");
+                        // thingDef = ThingSetMaker_ResourcePod.RandomPodContentsDef(false);
+                        var methodInfo = AccessTools.Method(typeof(ThingSetMaker_ResourcePod), "RandomPodContentsDef");
+                        newCodes.Add(new CodeInstruction(OpCodes.Ldc_I4_0)); // false
+                        newCodes.Add(new CodeInstruction(OpCodes.Call, methodInfo)); // 메서드 호출
+                        newCodes.Add(new CodeInstruction(OpCodes.Stloc_0)); // thingDef 저장 (로컬 변수 0번이라고 가정)
+                    }
                 }
+
+                return newCodes;
+
             }
         }
 

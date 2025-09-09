@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ResourcePodGenerate2.cs" />
     <Compile Include="ResourcePodGenerate.cs" />
     <Compile Include="DeepDrill.cs" />
     <Compile Include="MineablesCountRange.cs" />
