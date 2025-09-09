@@ -15,7 +15,7 @@ namespace Lilly
     public static class LillyMod_TradeAll
     {
         const string HarmonyId = "com.Lilly.TradeAll";
-        static Harmony harmony;
+        //static Harmony harmony;
 
         static LillyMod_TradeAll()
         {

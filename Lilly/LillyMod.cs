@@ -14,7 +14,7 @@ namespace Lilly
     public static class LillyMod
     {
         const string HarmonyId = "com.Lilly.mod";
-        static Harmony harmony;
+        //static Harmony harmony;
 
         static LillyMod()
         {

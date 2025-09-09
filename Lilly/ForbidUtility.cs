@@ -11,22 +11,21 @@ using Verse;
 namespace Lilly
 {
     [StaticConstructorOnStartup]
-    public static class LillyMod_DropPodUtility
+    public static class LillyMod_ForbidUtility
     {
-        const string HarmonyId = "com.Lilly.DropPodUtility";
+        const string HarmonyId = "com.Lilly.ForbidUtility";
         static Harmony harmony;
 
-        static LillyMod_DropPodUtility()
+        static LillyMod_ForbidUtility()
         {
-            return;
             Log.Warning($"+++ {HarmonyId} loading +++");
 
             harmony = new Harmony(HarmonyId);
 
             try
             {
-                var original = AccessTools.Method(typeof(DropPodUtility), "DropThingGroupsNear");
-                var prefix = typeof(LillyMod_DropPodUtility).GetMethod(nameof(ForceForbid));
+                var original = AccessTools.Method(typeof(ForbidUtility), "SetForbidden");
+                var prefix = typeof(LillyMod_ForbidUtility).GetMethod(nameof(ForceForbid));
                 harmony.Patch(original, prefix: new HarmonyMethod(prefix));
                 Log.Warning($"+++ {HarmonyId} loaded1 succ +++");
             }
@@ -40,9 +39,9 @@ namespace Lilly
         }
 
         public static bool ForceForbid(
-            ref bool forbid)
+            ref bool value)
         {
-            forbid = false;
+            value = false;
             return true; // 계속 원래 메서드 실행
         }
 

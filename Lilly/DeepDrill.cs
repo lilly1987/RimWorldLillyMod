@@ -20,6 +20,7 @@ namespace Lilly
 
         static LillyMod_DeepDrill()
         {
+            return;
             Log.Warning($"+++ {HarmonyId} loading +++");
 
             harmony = new Harmony(HarmonyId);
