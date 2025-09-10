@@ -53,16 +53,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ResourcePodGenerate2.cs" />
-    <Compile Include="ResourcePodGenerate.cs" />
     <Compile Include="DeepDrill.cs" />
-    <Compile Include="MineablesCountRange.cs" />
-    <Compile Include="ForbidUtility.cs" />
-    <Compile Include="DropPodUtility.cs" />
+    <Compile Include="DropPodUtilityForceForbid.cs" />
+    <Compile Include="ForbidUtilitySetForbidden.cs" />
+    <Compile Include="LillyHarmonyBase.cs" />
+    <Compile Include="LillyMod.cs" />
+    <Compile Include="LillyModSettings.cs" />
+    <Compile Include="MeteoriteMineablesCountRange.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourcePodGenerate.cs" />
+    <Compile Include="ResourcePodGenerate2.cs" />
     <Compile Include="StockGenerator_BuyAll.cs" />
     <Compile Include="TradeAll.cs" />
-    <Compile Include="LillyMod.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

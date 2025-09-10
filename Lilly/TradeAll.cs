@@ -12,12 +12,12 @@ using Verse;
 namespace Lilly
 {
     [StaticConstructorOnStartup]
-    public static class LillyMod_TradeAll
+    public static class TradeAll
     {
         const string HarmonyId = "com.Lilly.TradeAll";
         //static Harmony harmony;
 
-        static LillyMod_TradeAll()
+        static TradeAll()
         {
             Log.Warning($"+++ {HarmonyId} loading +++");
 

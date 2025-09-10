@@ -13,12 +13,12 @@ namespace Lilly
 {
     // 정상 작동
     [StaticConstructorOnStartup]
-    public static class LillyMod_ResourcePodGenerate
+    public static class ResourcePodGenerate
     {
         const string HarmonyId = "com.Lilly.ResourcePodGenerate";
         static Harmony harmony;
 
-        static LillyMod_ResourcePodGenerate()
+        static ResourcePodGenerate()
         {
             //return;
             Log.Warning($"+++ {HarmonyId} loading +++");

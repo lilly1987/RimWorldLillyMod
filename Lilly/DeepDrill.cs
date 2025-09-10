@@ -10,17 +10,17 @@ using Verse;
 
 namespace Lilly
 {
-    [StaticConstructorOnStartup]
-    public static class LillyMod_DeepDrill
+    //[StaticConstructorOnStartup]
+    public static class DeepDrill
     {
         const string HarmonyId = "com.Lilly.DeepDrill";
         static Harmony harmony;
 
         public static int cnt = 20000;
 
-        static LillyMod_DeepDrill()
+        static DeepDrill()
         {
-            return;
+            //return;
             Log.Warning($"+++ {HarmonyId} loading +++");
 
             harmony = new Harmony(HarmonyId);
@@ -154,7 +154,7 @@ namespace Lilly
                     // 정수 리터럴 21을 찾아서 7855로 변경
                     if (instruction.opcode == OpCodes.Ldc_I4 && (int)instruction.operand == 21)
                     {
-                        instruction.operand = LillyMod_DeepDrill.cnt;
+                        instruction.operand = DeepDrill.cnt;
                         Log.Warning($"+++ {HarmonyId} GetNextResource Succ +++");
                     }
                     yield return instruction;
@@ -203,7 +203,7 @@ namespace Lilly
             [HarmonyPrefix]
             public static bool Prefix(IntVec3 p, Map map, ref ThingDef resDef, ref int countPresent, ref IntVec3 cell, ref bool __result)
             {
-                for (int i = 0; i < LillyMod_DeepDrill.cnt; i++) // 반지름 확장
+                for (int i = 0; i < DeepDrill.cnt; i++) // 반지름 확장
                 {
                     IntVec3 intVec = p + GenRadial.RadialPattern[i];
 
@@ -240,7 +240,7 @@ namespace Lilly
                     // 정수 리터럴 21을 찾아서 21000으로 변경
                     if (instruction.opcode == OpCodes.Ldc_I4 && (int)instruction.operand == 21)
                     {
-                        instruction.operand = LillyMod_DeepDrill.cnt;
+                        instruction.operand = DeepDrill.cnt;
                         Log.Warning($"+++ {HarmonyId} TryProducePortion Succ +++");
                     }
                     yield return instruction;

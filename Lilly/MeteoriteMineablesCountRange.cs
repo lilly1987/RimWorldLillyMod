@@ -12,11 +12,11 @@ using Verse;
 namespace Lilly
 {
     [StaticConstructorOnStartup]
-    public static class LillyMod_MineablesCountRange
+    public static class MeteoriteMineablesCountRange
     {
         const string HarmonyId = "com.Lilly.MineablesCountRange";
 
-        static LillyMod_MineablesCountRange()
+        static MeteoriteMineablesCountRange()
         {
             try
             {

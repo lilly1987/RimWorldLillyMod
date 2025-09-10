@@ -13,7 +13,7 @@ using static HarmonyLib.Code;
 namespace Lilly
 {
     // 정상 작동
-    [StaticConstructorOnStartup]
+    //[StaticConstructorOnStartup]
     public static class LillyMod_ResourcePodGenerate2
     {
         const string HarmonyId = "com.Lilly.ResourcePodGenerate2";
@@ -21,7 +21,7 @@ namespace Lilly
 
         static LillyMod_ResourcePodGenerate2()
         {
-            //return;
+            return;
             Log.Warning($"+++ {HarmonyId} loading +++");
 
             harmony = new Harmony(HarmonyId);
@@ -47,8 +47,8 @@ namespace Lilly
             Log.Warning($"+++ {HarmonyId} end +++");
 
         }
-/*
-        [HarmonyPatch(typeof(ThingSetMaker_ResourcePod), "Generate")]
+
+        //[HarmonyPatch(typeof(ThingSetMaker_ResourcePod), "Generate")]
         public static class Patch_ResourcePod_Generate
         {
             [HarmonyPrefix]
@@ -91,6 +91,6 @@ namespace Lilly
                 return false;
             }
         }
-*/
+
     }
 }
