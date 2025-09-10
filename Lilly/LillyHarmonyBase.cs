@@ -9,6 +9,7 @@ namespace Lilly
 {
     public abstract class LillyHarmonyBase
     {
+        public static LillyModSettings settings;
         public virtual string harmonyId { get; set; } = "com.Lilly.Mod";
         public virtual Harmony harmony { get; set; } = null;
         public abstract void Patch();

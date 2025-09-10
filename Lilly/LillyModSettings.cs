@@ -11,8 +11,13 @@ namespace Lilly
     public class LillyModSettings : ModSettings
     {
         public bool DebugMode = false;
-        public bool isPatch = true;
+
+        public bool forbidUtilitySetForbiddenIs = true;
         public ForbidUtilitySetForbidden forbidUtilitySetForbidden = new ForbidUtilitySetForbidden();
+        
+        public bool waterBodyFishModIs = true;
+        public WaterBodyFishMod waterBodyFishMod = new WaterBodyFishMod();
+        public int maxFishPopulation = 1000000;
 
         public LillyModSettings()
         {
@@ -24,11 +29,19 @@ namespace Lilly
             Log.Warning($"+++ LillyModSettings ExposeData +++");
             base.ExposeData();
             Scribe_Values.Look(ref DebugMode, "DebugMode", false);
-            Scribe_Values.Look(ref isPatch, "isPatch", true);
-            if (isPatch)
+            Scribe_Values.Look(ref forbidUtilitySetForbiddenIs, "forbidUtilitySetForbiddenIs", true);
+            if (forbidUtilitySetForbiddenIs)
                 Patch(forbidUtilitySetForbidden);
             else
                 UnPatch(forbidUtilitySetForbidden);
+
+            Scribe_Values.Look(ref waterBodyFishModIs, "waterBodyFishModIs", true);
+            if (waterBodyFishModIs)
+                Patch(waterBodyFishMod);
+            else
+                UnPatch(waterBodyFishMod);
+            Scribe_Values.Look(ref maxFishPopulation, "maxFishPopulation", 1000000);
+            //WaterBodyFishMod.All();
         }
 
         public static void Patch(LillyHarmonyBase lillyHarmonyBase)

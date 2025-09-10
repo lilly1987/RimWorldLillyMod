@@ -24,7 +24,8 @@ namespace Lilly
             Log.Warning($"+++ LillyMod start +++");
             
             settings = GetSettings<LillyModSettings>();
-            
+            LillyHarmonyBase.settings= settings;
+
             Log.Warning($"+++ LillyMod end +++");
         }
         public override string SettingsCategory()
@@ -32,7 +33,7 @@ namespace Lilly
             return "- Lill_Mod".Translate();
         }
 
-        string tmp_s;
+        string tmp;
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
@@ -41,8 +42,35 @@ namespace Lilly
             listing.Begin(inRect);
 
             listing.CheckboxLabeled("DebugMode", ref settings.DebugMode, "DebugMode.");
-            listing.CheckboxLabeled("상호작용 적용".Translate(), ref settings.isPatch, "상호작용 기본값이 활성상태로 기본 적용".Translate());
-
+            
+            listing.CheckboxLabeled("상호작용 활성화 패치".Translate(), ref settings.forbidUtilitySetForbiddenIs, "상호작용 기본값이 활성상태로 기본 적용".Translate());
+            listing.GapLine();
+            listing.CheckboxLabeled("물고기 패치".Translate(), ref settings.waterBodyFishModIs, "해당 맵에서 사용 가능한 물고기 타입 무조건 적용. 새로운 맵 만들때 적용.".Translate());
+            tmp = settings.maxFishPopulation.ToString();
+            listing.Label("물고기 최대 개체수 설정".Translate(), tipSignal: "위 패치에 적용. 또는 아래 적용을 눌러야 적용.".Translate());
+            listing.TextFieldNumeric(ref settings.maxFishPopulation, ref tmp);
+            if (
+                listing.ButtonTextLabeled(
+                    "모든 맵에 물고기 종류 추가".Translate()
+                    , "적용".Translate()
+                    ,tooltip: "새로운 맵이 아닌 기존 모든 맵에도 적용. maxFishPopulation = 1000000".Translate()
+                )
+            ) {
+                WaterBodyFishMod.All();
+            }
+            ;
+            if (
+                listing.ButtonTextLabeled(
+                    "물고기 종류 출력 테스트".Translate()
+                    , "디버그출력".Translate()
+                    ,tooltip: "테스트".Translate()
+                )
+            ) {
+                WaterBodyFishMod.GetAllFishDefs();
+            }
+            ;
+            listing.GapLine();
+            
             listing.End();
         }
     }
