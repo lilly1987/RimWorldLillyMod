@@ -59,6 +59,7 @@
     <Compile Include="MineablesCountRange.cs" />
     <Compile Include="ForbidUtility.cs" />
     <Compile Include="DropPodUtility.cs" />
+    <Compile Include="StockGenerator_BuyAll.cs" />
     <Compile Include="TradeAll.cs" />
     <Compile Include="LillyMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
