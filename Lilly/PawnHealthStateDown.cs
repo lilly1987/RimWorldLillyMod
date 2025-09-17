@@ -12,6 +12,7 @@ namespace Lilly
 {
     public class PawnHealthStateDown : HarmonyBase
     {
+        public override string harmonyId => "com.Lilly.PawnHealthStateDown"; 
         public override void Patch()
         {
             harmony = new Harmony(harmonyId);
@@ -23,6 +24,8 @@ namespace Lilly
         public static void Postfix(Pawn ___pawn)
         {
             var pawn = ___pawn;
+            if(HarmonyBase.settings.DebugMode)
+                Log.Warning($"[+++] {pawn.Name} , {pawn.Downed} , {!pawn.InBed()} , {!pawn.IsPrisonerOfColony} , {pawn.RaceProps.Humanlike} , {pawn.Faction.HostileTo(Faction.OfPlayer)}");
             if (pawn != null 
                 && pawn.Downed 
                 //&& pawn.Faction != Faction.OfPlayer 

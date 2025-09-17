@@ -17,7 +17,7 @@ namespace Lilly
     {
         //const string HarmonyId = "com.Lilly.mod";
         //static Harmony harmony;
-        internal MainSettings settings;
+        public static MainSettings settings;
 
         public Main(ModContentPack content) : base(content)
         {
