@@ -13,18 +13,18 @@ using Verse;
 namespace Lilly
 {
     //[StaticConstructorOnStartup]
-    public class LillyMod : Mod
+    public class Main : Mod
     {
         //const string HarmonyId = "com.Lilly.mod";
         //static Harmony harmony;
-        internal LillyModSettings settings;
+        internal MainSettings settings;
 
-        public LillyMod(ModContentPack content) : base(content)
+        public Main(ModContentPack content) : base(content)
         {
             Log.Warning($"+++ LillyMod start +++");
             
-            settings = GetSettings<LillyModSettings>();
-            LillyHarmonyBase.settings= settings;
+            settings = GetSettings<MainSettings>();
+            HarmonyBase.settings= settings;
 
             Log.Warning($"+++ LillyMod end +++");
         }
@@ -42,12 +42,14 @@ namespace Lilly
             listing.Begin(inRect);
 
             listing.CheckboxLabeled("DebugMode", ref settings.DebugMode, "DebugMode.");
-            
+            listing.GapLine();
+
             listing.CheckboxLabeled("상호작용 활성화 패치".Translate(), ref settings.forbidUtilitySetForbiddenIs, "상호작용 기본값이 활성상태로 기본 적용".Translate());
             listing.GapLine();
+
             listing.CheckboxLabeled("물고기 패치".Translate(), ref settings.waterBodyFishModIs, "해당 맵에서 사용 가능한 물고기 타입 무조건 적용. 새로운 맵 만들때 적용.".Translate());
-            tmp = settings.maxFishPopulation.ToString();
             listing.Label("물고기 최대 개체수 설정".Translate(), tipSignal: "위 패치에 적용. 또는 아래 적용을 눌러야 적용.".Translate());
+            tmp = settings.maxFishPopulation.ToString();
             listing.TextFieldNumeric(ref settings.maxFishPopulation, ref tmp);
             if (
                 listing.ButtonTextLabeled(
@@ -70,6 +72,21 @@ namespace Lilly
             }
             ;
             listing.GapLine();
+
+            listing.Label("자원 운석 최소 갯수".Translate(), tipSignal: ".".Translate());
+            tmp= settings.MeteoriteMineablesCountRangeMin.ToString();
+            listing.TextFieldNumeric(ref settings.MeteoriteMineablesCountRangeMin, ref tmp);
+            listing.Label("자원 운석 최대 갯수".Translate(), tipSignal: ".".Translate());            
+            tmp= settings.MeteoriteMineablesCountRangeMax.ToString();
+            listing.TextFieldNumeric(ref settings.MeteoriteMineablesCountRangeMax, ref tmp);
+
+            listing.GapLine();
+
+            listing.CheckboxLabeled("PawnHealthStateDown 패치".Translate(), ref settings.PawnHealthStateDownIs, "PawnHealthStateDown.".Translate());
+            listing.GapLine();
+
+            //listing.CheckboxLabeled("RWAutoSell 패치".Translate(), ref settings.patch_ASMainTabListIs, "RWAutoSell.".Translate());
+            //listing.GapLine();
             
             listing.End();
         }

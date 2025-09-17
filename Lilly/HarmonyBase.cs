@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Lilly
 {
-    public abstract class LillyHarmonyBase
+    public abstract class HarmonyBase
     {
-        public static LillyModSettings settings;
+        public static MainSettings settings;
         public virtual string harmonyId { get; set; } = "com.Lilly.Mod";
         public virtual Harmony harmony { get; set; } = null;
         public abstract void Patch();

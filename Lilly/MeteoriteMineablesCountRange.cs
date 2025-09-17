@@ -11,12 +11,17 @@ using Verse;
 
 namespace Lilly
 {
-    [StaticConstructorOnStartup]
+    //[StaticConstructorOnStartup]
     public static class MeteoriteMineablesCountRange
     {
         const string HarmonyId = "com.Lilly.MineablesCountRange";
 
-        static MeteoriteMineablesCountRange()
+        //static MeteoriteMineablesCountRange()
+        //{
+        //    SetValue();
+        //}
+
+        public static void SetValue(int min=25,int max=100)
         {
             try
             {
@@ -25,7 +30,7 @@ namespace Lilly
 
                 if (field != null)
                 {
-                    var range = new IntRange(25, 100); // 원하는 범위로 설정
+                    var range = new IntRange(min, max); // 원하는 범위로 설정
                     // readonly 필드 강제 수정
                     field.SetValue(null, range); // 원하는 범위로 변경
                     Log.Warning($"+++ {HarmonyId} MineablesCountRange has been overridden to {range.min}~{range.max}");
@@ -44,6 +49,5 @@ namespace Lilly
                 //throw;
             }
         }
-
     }
 }

@@ -11,7 +11,7 @@ using Verse.Noise;
 
 namespace Lilly
 {
-    public class WaterBodyFishMod : LillyHarmonyBase
+    public class WaterBodyFishMod : HarmonyBase
     {
         public override string harmonyId => "Lilly.WaterBody";
 
@@ -20,6 +20,15 @@ namespace Lilly
             var original = AccessTools.Method(typeof(WaterBody), "SetFishTypes");
             var Prefix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.Prefix));
             harmony.Patch(original, Prefix);
+
+            original = AccessTools.Method(typeof(ScribeLoader), "InitLoading");
+            var postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.Postfix));
+            harmony.Patch(original, postfix: postfix);
+        }
+
+        private static void Postfix()
+        {
+            All();
         }
 
         [HarmonyPrefix]
@@ -63,14 +72,17 @@ namespace Lilly
 
         public static void All()
         {
+            if (Find.Maps == null) return;
             foreach (var map in Find.Maps)
             {
+                Log.Warning($"+++ WaterBody All start +++");                
                 Log.Warning($"+++ maxFishPopulation {map.TileInfo.PrimaryBiome.maxFishPopulation} +++");                
                 Log.Warning($"+++ Bodies {map.waterBodyTracker.Bodies.Count} +++");                
                 foreach (var waterBody in map.waterBodyTracker.Bodies)
                 {
                     waterBody.SetFishTypes();
                 }
+                Log.Warning($"+++ WaterBody All End +++");                
             }
         }
 

@@ -8,7 +8,7 @@ using Verse;
 
 namespace Lilly
 {
-    public class LillyModSettings : ModSettings
+    public class MainSettings : ModSettings
     {
         public bool DebugMode = false;
 
@@ -18,33 +18,64 @@ namespace Lilly
         public bool waterBodyFishModIs = true;
         public WaterBodyFishMod waterBodyFishMod = new WaterBodyFishMod();
         public int maxFishPopulation = 1000000;
+        public int MeteoriteMineablesCountRangeMin = 8;
+        public int MeteoriteMineablesCountRangeMax = 20;
 
-        public LillyModSettings()
+        public bool patch_ASMainTabListIs = true;
+        public Patch_ASMainTabList  patch_ASMainTabList = new Patch_ASMainTabList();
+
+        public bool PawnHealthStateDownIs = true;
+        public PawnHealthStateDown pawnHealthStateDown = new PawnHealthStateDown();
+
+        public MainSettings()
         {
             Log.Warning($"+++ LillyModSettings ctor +++");
         }
 
         public override void ExposeData()
         {
-            Log.Warning($"+++ LillyModSettings ExposeData +++");
             base.ExposeData();
-            Scribe_Values.Look(ref DebugMode, "DebugMode", false);
-            Scribe_Values.Look(ref forbidUtilitySetForbiddenIs, "forbidUtilitySetForbiddenIs", true);
-            if (forbidUtilitySetForbiddenIs)
-                Patch(forbidUtilitySetForbidden);
-            else
-                UnPatch(forbidUtilitySetForbidden);
+            Log.Warning($"+++ LillyModSettings ExposeData {Scribe.mode} +++");
+            if (Scribe.mode != LoadSaveMode.LoadingVars && Scribe.mode != LoadSaveMode.Saving)
+            {            
+                return;
+            }
 
-            Scribe_Values.Look(ref waterBodyFishModIs, "waterBodyFishModIs", true);
-            if (waterBodyFishModIs)
-                Patch(waterBodyFishMod);
-            else
-                UnPatch(waterBodyFishMod);
-            Scribe_Values.Look(ref maxFishPopulation, "maxFishPopulation", 1000000);
-            //WaterBodyFishMod.All();
+            //
+            Scribe_Values.Look(ref DebugMode, "DebugMode", false);
+
+            //
+            TogglePatch(forbidUtilitySetForbiddenIs, "waterBodyFishModIs", forbidUtilitySetForbidden);
+
+            //
+            TogglePatch(waterBodyFishModIs, "waterBodyFishModIs", waterBodyFishMod);
+
+            Scribe_Values.Look(ref maxFishPopulation, "maxFishPopulation");
+            WaterBodyFishMod.All();
+
+            //
+            Scribe_Values.Look(ref MeteoriteMineablesCountRangeMin, "MeteoriteMineablesCountRangeMin");
+            Scribe_Values.Look(ref MeteoriteMineablesCountRangeMax, "MeteoriteMineablesCountRangeMax");
+            MeteoriteMineablesCountRange.SetValue(MeteoriteMineablesCountRangeMin, MeteoriteMineablesCountRangeMax);
+            
+            //
+            TogglePatch(patch_ASMainTabListIs, "patch_ASMainTabList", patch_ASMainTabList);
+            
+            //
+            TogglePatch(PawnHealthStateDownIs, "pawnHealthStateDown", pawnHealthStateDown);
         }
 
-        public static void Patch(LillyHarmonyBase lillyHarmonyBase)
+        public void TogglePatch(bool isEnabled,string msg, HarmonyBase patch)
+        {
+            Scribe_Values.Look(ref isEnabled, msg, true);
+            if (isEnabled)
+                Patch(patch);
+            else
+                UnPatch(patch);
+        }
+
+
+        public static void Patch(HarmonyBase lillyHarmonyBase)
         {
             if (lillyHarmonyBase.harmony != null) return;
 
@@ -63,7 +94,7 @@ namespace Lilly
             }
         }
 
-        public static void UnPatch(LillyHarmonyBase lillyHarmonyBase)
+        public static void UnPatch(HarmonyBase lillyHarmonyBase)
         {
             if (lillyHarmonyBase.harmony == null) return;
             try

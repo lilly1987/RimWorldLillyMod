@@ -14,7 +14,7 @@ using Type = System.Type;
 
 namespace Lilly
 {
-    public class ForbidUtilitySetForbidden : LillyHarmonyBase
+    public class ForbidUtilitySetForbidden : HarmonyBase
     {
         public override string harmonyId => "com.Lilly.ForbidUtilitySetForbidden";
 
