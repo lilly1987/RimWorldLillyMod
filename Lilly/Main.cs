@@ -82,7 +82,8 @@ namespace Lilly
 
             listing.GapLine();
 
-            listing.CheckboxLabeled("PawnHealthStateDown 패치".Translate(), ref settings.PawnHealthStateDownIs, "PawnHealthStateDown.".Translate());
+            listing.CheckboxLabeled("PawnHealthStateDown 패치".Translate(), ref settings.PawnHealthStateDownIs, "CaptureThem 모드 필요.".Translate());
+            listing.CheckboxLabeled("PawnHealthStateDown debug".Translate(), ref settings.PawnHealthStateDownDebug, ".".Translate());
             listing.GapLine();
 
             //listing.CheckboxLabeled("RWAutoSell 패치".Translate(), ref settings.patch_ASMainTabListIs, "RWAutoSell.".Translate());

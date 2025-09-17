@@ -40,6 +40,9 @@
       <HintPath>Y:\games\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CaptureThem">
+      <HintPath>..\..\..\3255137581\1.6\Assemblies\CaptureThem.dll</HintPath>
+    </Reference>
     <Reference Include="RWASFilterLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\1440321094\1.6\Assemblies\RWASFilterLib.dll</HintPath>

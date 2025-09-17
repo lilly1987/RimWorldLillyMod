@@ -25,6 +25,7 @@ namespace Lilly
         public Patch_ASMainTabList  patch_ASMainTabList = new Patch_ASMainTabList();
 
         public bool PawnHealthStateDownIs = true;
+        public bool PawnHealthStateDownDebug = false;
         public PawnHealthStateDown pawnHealthStateDown = new PawnHealthStateDown();
 
         public MainSettings()
@@ -63,6 +64,7 @@ namespace Lilly
             
             //
             TogglePatch(PawnHealthStateDownIs, "pawnHealthStateDown", pawnHealthStateDown);
+            Scribe_Values.Look(ref PawnHealthStateDownDebug, "PawnHealthStateDownDebug", false);
         }
 
         public void TogglePatch(bool isEnabled,string msg, HarmonyBase patch)
