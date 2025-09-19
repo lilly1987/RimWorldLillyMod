@@ -10,6 +10,8 @@ namespace Lilly
 {
     public class MainSettings : ModSettings
     {
+        public static MainSettings settings;
+
         public bool DebugMode = false;
 
         public bool forbidUtilitySetForbiddenIs = true;
@@ -28,9 +30,19 @@ namespace Lilly
         public bool PawnHealthStateDownDebug = false;
         public PawnHealthStateDown pawnHealthStateDown = new PawnHealthStateDown();
 
+        public bool resourcePodGenerateIs = true;
+        public ResourcePodGenerate resourcePodGenerate = new ResourcePodGenerate();
+        public float resourcePodGenerateMin = 10000f;
+        public float resourcePodGenerateMax = 1000000f;
+        public int resourcePodGenerateStackMin = 100;
+        public int resourcePodGenerateStackMax = 10000;
+        public int resourcePodGeneratePodMax = 100;
+
         public MainSettings()
         {
             Log.Warning($"+++ LillyModSettings ctor +++");
+            settings= this;
+            HarmonyBase.settings = settings;
         }
 
         public override void ExposeData()
@@ -65,13 +77,25 @@ namespace Lilly
             //
             TogglePatch(PawnHealthStateDownIs, "pawnHealthStateDown", pawnHealthStateDown);
             Scribe_Values.Look(ref PawnHealthStateDownDebug, "PawnHealthStateDownDebug", false);
+
+            //
+            TogglePatch(resourcePodGenerateIs, "resourcePodGenerate", resourcePodGenerate);
+            Scribe_Values.Look(ref resourcePodGenerateMin, "resourcePodGenerateMin");
+            Scribe_Values.Look(ref resourcePodGenerateMax, "resourcePodGenerateMax");
+            Scribe_Values.Look(ref resourcePodGenerateStackMin, "resourcePodGenerateStackMin");
+            Scribe_Values.Look(ref resourcePodGenerateStackMax, "resourcePodGenerateStackMax");
+            Scribe_Values.Look(ref resourcePodGeneratePodMax, "resourcePodGeneratePodMax");
         }
 
-        public void TogglePatch(bool isEnabled,string msg, HarmonyBase patch)
+        public void TogglePatch(bool isEnabled,string msg, HarmonyBase patch,bool repatch=false)
         {
             Scribe_Values.Look(ref isEnabled, msg, true);
             if (isEnabled)
+            {
+                if (repatch)
+                    UnPatch(patch);
                 Patch(patch);
+            }
             else
                 UnPatch(patch);
         }

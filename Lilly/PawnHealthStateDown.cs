@@ -26,34 +26,81 @@ namespace Lilly
         {
             harmony = new Harmony(harmonyId);
             var original = AccessTools.Method(typeof(Pawn_HealthTracker), "CheckForStateChange");
-            var Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(Postfix));
+            var Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(CheckForStateChange));
+            //harmony.Patch(original, Prefix);
+            original = AccessTools.Method(typeof(Pawn_HealthTracker), "ShouldBeDowned");
+            Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(ShouldBeDowned));
+            //harmony.Patch(original, Prefix);
+            original = AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned");
+            Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(MakeDowned));
             harmony.Patch(original, Prefix);
         }
 
-        public static void Postfix(Pawn ___pawn) //  ,ref bool __result
+        static Pawn pawn;
+
+        public static void CheckForStateChange(Pawn ___pawn) //  ,ref bool __result
         {
-            //if (!__result) return;
-            var pawn = ___pawn;
-            if (pawn != null
-                && pawn.Downed 
+            if (___pawn == null || pawn != ___pawn) return;
+            var pawn_ = ___pawn;
+            
+                if (HarmonyBase.settings.PawnHealthStateDownDebug )
+                    Log.Warning($"[+CheckForStateChange+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+
+                pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
+
+        }
+        public static void ShouldBeDowned(Pawn ___pawn) //  ,ref bool __result
+        {
+            if (___pawn == null) return;
+            var pawn_ = ___pawn;
+            if (___pawn != null
+                //&& pawn_.Downed 
                 //&& pawn.Faction != Faction.OfPlayer 
-                && !pawn.InBed() 
-                && !pawn.IsPrisonerOfColony 
-                && pawn.RaceProps.Humanlike
-                && pawn.Faction.HostileTo(Faction.OfPlayer)
+                && !pawn_.InBed()
+                && !pawn_.IsPrisonerOfColony
+                && pawn_.RaceProps.Humanlike
+                && pawn_.Faction.HostileTo(Faction.OfPlayer)
                 )
             {
-                if (HarmonyBase.settings.PawnHealthStateDownDebug)
-                    Log.Warning($"[+++] {pawn.Name} , {pawn.Downed} , {!pawn.InBed()} , {!pawn.IsPrisonerOfColony} , {pawn.RaceProps.Humanlike} , {pawn.Faction.HostileTo(Faction.OfPlayer)}");
-                pawn.Map.designationManager.RemoveAllDesignationsOn(pawn, false);
-                pawn.Map.designationManager.AddDesignation(new Designation(pawn, def, null));
+                if (HarmonyBase.settings.PawnHealthStateDownDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
+                    Log.Warning($"[+ShouldBeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+
+                pawn = pawn_;
+            }
+        }
+        public static void MakeDowned(Pawn ___pawn) //  ,ref bool __result
+        {
+            if (___pawn == null) return;
+            //if (___pawn == null || pawn != ___pawn) return;
+            var pawn_ = ___pawn;
+            if (pawn_ != null
+                //&& pawn_.Downed 
+                //&& pawn.Faction != Faction.OfPlayer 
+                && !pawn_.InBed() 
+                && !pawn_.IsPrisonerOfColony 
+                && pawn_.RaceProps.Humanlike
+                && pawn_.Faction.HostileTo(Faction.OfPlayer)
+                )
+            {
+                if (HarmonyBase.settings.PawnHealthStateDownDebug ) 
+                    Log.Warning($"[+MakeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+                //pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
                 //Job job = JobMaker.MakeJob(JobDefOf.Capture, pawn);
                 //pawn.jobs.TryTakeOrderedJob(job);
-            } else
-            {
-                if (HarmonyBase.settings.PawnHealthStateDownDebug)
-                    Log.Warning($"[---] {pawn.Name} , {pawn.Downed} , {!pawn.InBed()} , {!pawn.IsPrisonerOfColony} , {pawn.RaceProps.Humanlike} , {pawn.Faction.HostileTo(Faction.OfPlayer)}");
-            }
+                //pawn = pawn_;
+                var a = pawn_.Map?.designationManager;
+                if (a != null)
+                {
+                    a.RemoveAllDesignationsOn(pawn, false);
+                    a.AddDesignation(new Designation(pawn_, def, null));
+                }
+            } 
+            //else
+            //    pawn = null;
+            //{
+            //    if (HarmonyBase.settings.PawnHealthStateDownDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
+            //        Log.Warning($"[-MakeDowned-] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+            //}
         }
     }
 }
