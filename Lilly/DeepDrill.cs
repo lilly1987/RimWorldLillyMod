@@ -21,20 +21,20 @@ namespace Lilly
         static DeepDrill()
         {
             //return;
-            Log.Warning($"+++ {HarmonyId} loading +++");
+            MyLog.Warning($"{HarmonyId} loading");
 
             harmony = new Harmony(HarmonyId);
 
             try
             {
                 harmony.PatchAll();
-                Log.Warning($"+++ {HarmonyId} loaded1 succ +++");
+                MyLog.Warning($"{HarmonyId} loaded1 succ");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
+                MyLog.Error($"{HarmonyId} loaded1 Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{HarmonyId} loaded1 Fail");
                 //throw;
             }
 
@@ -54,13 +54,13 @@ namespace Lilly
             //        )
             //        ,transpiler: new HarmonyMethod(typeof(Patch_DeepDrillUtility_GetNextResource), "Transpiler")
             //    );
-            //    Log.Warning($"+++ {HarmonyId}2 succ +++");
+            //    MyLog.Warning($"{HarmonyId}2 succ");
             //}
             //catch (Exception e)
             //{
-            //    Log.Error($"+++ {HarmonyId}2 Fail +++");
-            //    Log.Error(e.ToString());
-            //    Log.Error($"+++ {HarmonyId}2 Fail +++");
+            //    MyLog.Error($"{HarmonyId}2 Fail");
+            //    MyLog.Error(e.ToString());
+            //    MyLog.Error($"{HarmonyId}2 Fail");
             //    //throw;
             //}
 
@@ -81,17 +81,17 @@ namespace Lilly
                     //,transpiler: new HarmonyMethod(typeof(Patch_DeepDrillUtility_GetNextResource2), "Transpiler")
                     , prefix: new HarmonyMethod(typeof(Patch_DeepDrillUtility_GetNextResource3), "Prefix")
                 );
-                Log.Warning($"+++ {HarmonyId} loaded3 succ +++");
+                MyLog.Warning($"{HarmonyId} loaded3 succ");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {HarmonyId}3 Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {HarmonyId}3 Fail +++");
+                MyLog.Error($"{HarmonyId}3 Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{HarmonyId}3 Fail");
                 //throw;
             }
 
-            Log.Warning($"+++ {HarmonyId} end +++");
+            MyLog.Warning($"{HarmonyId} end");
 
         }
 
@@ -121,7 +121,7 @@ namespace Lilly
             //            if (instruction.opcode == OpCodes.Ldc_I4 && instruction.operand is int value && value == 21)
             //            {
             //                instruction.operand = LillyMod.cnt;
-            //                Log.Warning("+++ LillyMod radius patched to " + LillyMod.cnt + " +++");
+            //                MyLog.Warning("LillyMod radius patched to " + LillyMod.cnt + "");
             //                newCodes.Add(instruction);
             //                continue;
             //            }
@@ -133,7 +133,7 @@ namespace Lilly
             //                codes[i + 2].Calls(typeof(IntVec3).GetMethod("InBounds")))
             //            {
             //                // 조건 제거: InBounds 호출 제거 후 항상 true 처리
-            //                Log.Warning("+++ LillyMod removed InBounds check +++");
+            //                MyLog.Warning("LillyMod removed InBounds check");
             //                newCodes.Add(new CodeInstruction(OpCodes.Ldc_I4_1)); // push true
             //                i += 2; // skip original InBounds call
             //                continue;
@@ -155,7 +155,7 @@ namespace Lilly
                     if (instruction.opcode == OpCodes.Ldc_I4 && (int)instruction.operand == 21)
                     {
                         instruction.operand = DeepDrill.cnt;
-                        Log.Warning($"+++ {HarmonyId} GetNextResource Succ +++");
+                        MyLog.Warning($"{HarmonyId} GetNextResource Succ");
                     }
                     yield return instruction;
                 }
@@ -188,7 +188,7 @@ namespace Lilly
 
                         // 대신 항상 true로 처리
                         newCodes.Add(new CodeInstruction(OpCodes.Ldc_I4_1)); // push true
-                        Log.Warning($"+++ {HarmonyId} GetNextResource2 Succ +++");
+                        MyLog.Warning($"{HarmonyId} GetNextResource2 Succ");
                         continue;
                     }
 
@@ -241,7 +241,7 @@ namespace Lilly
                     if (instruction.opcode == OpCodes.Ldc_I4 && (int)instruction.operand == 21)
                     {
                         instruction.operand = DeepDrill.cnt;
-                        Log.Warning($"+++ {HarmonyId} TryProducePortion Succ +++");
+                        MyLog.Warning($"{HarmonyId} TryProducePortion Succ");
                     }
                     yield return instruction;
                 }

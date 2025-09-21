@@ -19,7 +19,7 @@ namespace Lilly
 
         static TradeAll()
         {
-            Log.Warning($"+++ {HarmonyId} loading +++");
+            MyLog.Warning($"{HarmonyId} ST");
 
             try
             {
@@ -59,12 +59,14 @@ namespace Lilly
                     }
 
                 }
+
+                MyLog.Warning($"{HarmonyId} ED");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
+                MyLog.Error($"{HarmonyId} Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{HarmonyId} Fail");
             }
         }
     }

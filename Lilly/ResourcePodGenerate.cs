@@ -60,7 +60,7 @@ namespace Lilly
 
         public static IEnumerable<CodeInstruction> Transpile(IEnumerable<CodeInstruction> instructions)
         {
-            Log.Warning($"+++ {Id} Transpile +++");
+            MyLog.Warning($"{Id} Transpile");
             var codes = new List<CodeInstruction>(instructions);
             var newCodes = new List<CodeInstruction>();
 
@@ -72,26 +72,26 @@ namespace Lilly
                     // 총 시장가치 합계
                     if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 150f)
                     {
-                        Log.Warning($"+++ {Id} succ1 +++");
+                        MyLog.Warning($"{Id} succ1");
                         //instruction.operand = 10000f;
                         instruction.operand = resourcePodGenerateMin;
                     }
                     else if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 600f)
                     {
-                        Log.Warning($"+++ {Id} succ2 +++");
+                        MyLog.Warning($"{Id} succ2");
                         instruction.operand = resourcePodGenerateMax;
                     }
 
                     // 포드별 갯수 범위
                     else if (instruction.opcode == OpCodes.Ldc_I4_S && instruction.operand is sbyte sb && sb == 20) // 
                     {
-                        Log.Warning($"+++ {Id} succ3 +++");
+                        MyLog.Warning($"{Id} succ3");
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = resourcePodGenerateStackMin;
                     }
                     else if (instruction.opcode == OpCodes.Ldc_I4_S && instruction.operand is sbyte sb2 && sb2 == 40)
                     {
-                        Log.Warning($"+++ {Id} succ4 +++");
+                        MyLog.Warning($"{Id} succ4");
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = resourcePodGenerateStackMax;
                     }
@@ -99,25 +99,25 @@ namespace Lilly
                     // 포드 최대 갯수
                     else if (instruction.opcode == OpCodes.Ldc_I4_7)
                     {
-                        Log.Warning($"+++ {Id} succ5 +++");
+                        MyLog.Warning($"{Id} succ5");
                         instruction.opcode = OpCodes.Ldc_I4;
                         instruction.operand = resourcePodGeneratePodMax;
                     }                        
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"+++ {Id} Transpile Fail +++");
-                    Log.Error(e.ToString());
-                    Log.Error($"+++ {Id} Transpile Fail +++");
+                    MyLog.Error($"{Id} Transpile Fail");
+                    MyLog.Error(e.ToString());
+                    MyLog.Error($"{Id} Transpile Fail");
                 }
 
                 newCodes.Add(instruction);
-                //Log.Warning($"+++ {instruction.opcode} : {instruction.operand} +++");
+                //MyLog.Warning($"{instruction.opcode} : {instruction.operand}");
 
                 // 종류 다양화
                 if (instruction.opcode == OpCodes.Stloc_3)
                 {
-                    Log.Warning($"+++ {Id} succ6 +++");
+                    MyLog.Warning($"{Id} succ6");
                     // thingDef = ThingSetMaker_ResourcePod.RandomPodContentsDef(false);
                     var methodInfo = AccessTools.Method(typeof(ThingSetMaker_ResourcePod), "RandomPodContentsDef");
                     newCodes.Add(new CodeInstruction(OpCodes.Ldc_I4_0)); // false

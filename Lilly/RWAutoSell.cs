@@ -22,14 +22,14 @@ public class RWAutoSell_ASMainTabList : HarmonyBase
         ASMainTabList = AccessTools.TypeByName("RWAutoSell.ASMainTabList");
         if (ASMainTabList == null)
         {
-            Log.Warning("[+++] ASMainTabList 타입을 찾을 수 없습니다.");
+            MyLog.Warning("[+++] ASMainTabList 타입을 찾을 수 없습니다.");
             onPatch = false;
             return;
         }
         var IRuleComp = AccessTools.TypeByName("RWASFilterLib.IRuleComp");
         if (IRuleComp == null)
         {
-            Log.Warning("[+++] IRuleComp 타입을 찾을 수 없습니다.");
+            MyLog.Warning("[+++] IRuleComp 타입을 찾을 수 없습니다.");
             onPatch = false;
             return;
         }
@@ -48,14 +48,14 @@ public class RWAutoSell_ASMainTabList : HarmonyBase
 
     public static void Postfix_Ctor(object __instance)
     {
-        Log.Warning("[+++] ASMainTabList 생성자 후처리 실행됨");
+        MyLog.Warning("[+++] ASMainTabList 생성자 후처리 실행됨");
 
         // 생성자 이후 Map 값을 강제로 변경
         var mapField = AccessTools.Field(ASMainTabList, "<Map>k__BackingField");
         if (mapField != null)
         {
             mapField.SetValue(__instance, Find.CurrentMap);
-            Log.Warning("[+++] 생성자 후 Map 값 변경 완료");
+            MyLog.Warning("[+++] 생성자 후 Map 값 변경 완료");
         }
     }
 

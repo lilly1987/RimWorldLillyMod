@@ -120,23 +120,23 @@ namespace Lilly
             if (Find.Maps == null) return;
             foreach (var map in Find.Maps)
             {
-                Log.Warning($"+++ WaterBody All start +++");                
-                Log.Warning($"+++ maxFishPopulation {map.TileInfo.PrimaryBiome.maxFishPopulation} +++");                
-                Log.Warning($"+++ Bodies {map.waterBodyTracker.Bodies.Count} +++");                
+                MyLog.Warning($"WaterBody All start");                
+                MyLog.Warning($"maxFishPopulation {map.TileInfo.PrimaryBiome.maxFishPopulation}");                
+                MyLog.Warning($"Bodies {map.waterBodyTracker.Bodies.Count}");                
                 foreach (var waterBody in map.waterBodyTracker.Bodies)
                 {
                     waterBody.SetFishTypes();
                 }
-                Log.Warning($"+++ WaterBody All End +++");                
+                MyLog.Warning($"WaterBody All End");                
             }
         }
 
         public static  void GetAllFishDefs()//List<ThingDef>
         {
-            Log.Warning($"+++ {ThingCategoryDefOf.Fish.childThingDefs.Count} +++");
+            MyLog.Warning($"{ThingCategoryDefOf.Fish.childThingDefs.Count}");
             foreach(var t in ThingCategoryDefOf.Fish.childThingDefs)
             {
-                Log.Warning($"+++ {t.description} +++");
+                MyLog.Warning($"{t.description}");
             }            
             //return DefDatabase<ThingDef>.AllDefs
             //    .Where(def => def.thingCategories != null &&

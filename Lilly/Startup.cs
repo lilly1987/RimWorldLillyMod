@@ -8,7 +8,7 @@ namespace Lilly
     {
         static Startup()
         {
-            Log.Warning($"+++ Lilly {nameof(Startup)}.ctor ST {HarmonyBase.allHarmonyBases.Count} +++");
+            MyLog.Warning($"{nameof(Startup)}.ctor ST {HarmonyBase.allHarmonyBases.Count}");
             //ModUI.settings = ModUI.modUI.GetSettings<MainSettings>();
 
             //new ForbidUtilitySetForbidden();
@@ -22,7 +22,7 @@ namespace Lilly
                 hb.OnPatch(true);
             }
 
-            Log.Warning($"+++ Lilly {nameof(Startup)}.ctor ED +++");
+            MyLog.Warning($"{nameof(Startup)}.ctor ED");
         }
     }
 

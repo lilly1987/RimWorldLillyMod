@@ -32,11 +32,11 @@ namespace Lilly
 
         public HarmonyBase()
         {
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ST {allHarmonyBases.Count} +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ST {allHarmonyBases.Count}");
             allHarmonyBases.Add(this);
             exposeData += ExposeData;
             doSettingsWindowContents+= DoSettingsWindowContents;
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ED {allHarmonyBases.Count} +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ED {allHarmonyBases.Count}");
 
         }
         public virtual void DoSettingsWindowContents(Rect inRect, Listing_Standard listing) { }
@@ -70,24 +70,24 @@ namespace Lilly
         public void OnPatch(bool force=false)
         {
             if (harmony != null) return;
-            Log.Warning($"+++ {harmonyId} Patch ST {Scribe.mode} {force} +++");
+            MyLog.Warning($"{harmonyId} Patch ST {Scribe.mode} {force}");
             if (!force && Scribe.mode != LoadSaveMode.Saving)
             {
-                Log.Warning($"+++ {harmonyId} Patch ED 0 +++");
+                MyLog.Warning($"{harmonyId} Patch ED RT");
                 return;
             }
             harmony = new Harmony(harmonyId);
             try
             {
-                //Log.Warning($"+++ {harmonyId} Patch ST +++");
+                //MyLog.Warning($"{harmonyId} Patch ST");
                 Patch();
-                Log.Warning($"+++ {harmonyId} Patch ED 1 +++");
+                MyLog.Warning($"{harmonyId} Patch ED OK");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {harmonyId} Patch Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {harmonyId} Patch Fail +++");
+                MyLog.Error($"{harmonyId} Patch Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{harmonyId} Patch Fail");
                 //throw;
                 UnPatch();
             }
@@ -98,16 +98,16 @@ namespace Lilly
             if (harmony == null) return;
             try
             {
-                Log.Warning($"+++ {harmonyId} UnPatch ST +++");
+                MyLog.Warning($"{harmonyId} UnPatch ST");
                 harmony.UnpatchAll(harmonyId);
                 harmony = null;
-                Log.Warning($"+++ {harmonyId} UnPatch ED +++");
+                MyLog.Warning($"{harmonyId} UnPatch ED");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {harmonyId} UnPatch Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {harmonyId} UnPatch Fail +++");
+                MyLog.Error($"{harmonyId} UnPatch Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{harmonyId} UnPatch Fail");
                 //throw;
             }
         }

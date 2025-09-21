@@ -65,7 +65,7 @@ namespace Lilly
             var pawn_ = ___pawn;
             
                 if (PawnHealthStateDown.self.onDebug)
-                    Log.Warning($"[+CheckForStateChange+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+                    MyLog.Warning($"[+CheckForStateChange+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
 
                 pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
 
@@ -84,7 +84,7 @@ namespace Lilly
                 )
             {
                 if (PawnHealthStateDown.self.onDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
-                    Log.Warning($"[+ShouldBeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+                    MyLog.Warning($"[+ShouldBeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
 
                 pawn = pawn_;
             }
@@ -104,7 +104,7 @@ namespace Lilly
                 )
             {
                 if (PawnHealthStateDown.self.onDebug) 
-                    Log.Warning($"[+MakeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+                    MyLog.Warning($"[+MakeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
                 //pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
                 //Job job = JobMaker.MakeJob(JobDefOf.Capture, pawn);
                 //pawn.jobs.TryTakeOrderedJob(job);
@@ -120,7 +120,7 @@ namespace Lilly
             //    pawn = null;
             //{
             //    if (HarmonyBase.settings.PawnHealthStateDownDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
-            //        Log.Warning($"[-MakeDowned-] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
+            //        MyLog.Warning($"[-MakeDowned-] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
             //}
         }
     }

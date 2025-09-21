@@ -36,29 +36,29 @@ namespace Lilly
             drillTurretType = AccessTools.TypeByName("Building_DrillTurret");
             if (drillTurretType == null)
             {
-                Log.Warning("[DrillTurretPatch] Building_DrillTurret 타입을 찾을 수 없습니다.");
+                MyLog.Warning("Building_DrillTurret 타입을 찾을 수 없습니다.");
                 return;
             }
 
             MethodInfo targetMethod = AccessTools.Method(drillTurretType, "lookForNewTarget",
                 new Type[] { typeof(IntVec3).MakeByRefType() } );
 
-            Log.Warning("isValidTargetAt");
+            MyLog.Warning("isValidTargetAt");
             isValidTargetAt = AccessTools.Method(drillTurretType, "isValidTargetAt",
                 new Type[] { typeof(IntVec3) });
-            Log.Warning("TargetPosition");
+            MyLog.Warning("TargetPosition");
             targetPosProp = AccessTools.Field(drillTurretType, "TargetPosition");
-            //Log.Warning("TrueCenter");
+            //MyLog.Warning("TrueCenter");
             //trueCenterMethod = AccessTools.Method(drillTurretType, "TrueCenter");
-            //Log.Warning("turretTopRotation");
+            //MyLog.Warning("turretTopRotation");
             //turretTopRotationField = AccessTools.Field(drillTurretType, "turretTopRotation");
-            Log.Warning("end");
+            MyLog.Warning("end");
 
             //if (targetMethod == null || isValidTargetAt == null || targetPosProp == null || trueCenterMethod == null || turretTopRotationField == null)
             if (targetMethod == null || isValidTargetAt == null || targetPosProp == null )
             {
-                //Log.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{targetMethod == null}, {isValidTargetAt == null} , {targetPosProp == null} , { trueCenterMethod == null} , {turretTopRotationField == null}");
-                Log.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{targetMethod == null}, {isValidTargetAt == null} , {targetPosProp == null} ");
+                //MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{targetMethod == null}, {isValidTargetAt == null} , {targetPosProp == null} , { trueCenterMethod == null} , {turretTopRotationField == null}");
+                MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{targetMethod == null}, {isValidTargetAt == null} , {targetPosProp == null} ");
                 return;
             }
 

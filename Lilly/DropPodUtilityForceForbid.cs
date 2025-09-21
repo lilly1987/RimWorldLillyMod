@@ -19,7 +19,7 @@ namespace Lilly
         static DropPodUtilityForceForbid()
         {
             //return;
-            Log.Warning($"+++ {HarmonyId} loading +++");
+            MyLog.Warning($"{HarmonyId} loading");
 
             harmony = new Harmony(HarmonyId);
 
@@ -28,13 +28,13 @@ namespace Lilly
                 var original = AccessTools.Method(typeof(DropPodUtility), "DropThingGroupsNear");
                 var prefix = typeof(DropPodUtilityForceForbid).GetMethod(nameof(ForceForbid));
                 harmony.Patch(original, prefix: new HarmonyMethod(prefix));
-                Log.Warning($"+++ {HarmonyId} loaded1 succ +++");
+                MyLog.Warning($"{HarmonyId} loaded1 succ");
             }
             catch (Exception e)
             {
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
-                Log.Error(e.ToString());
-                Log.Error($"+++ {HarmonyId} loaded1 Fail +++");
+                MyLog.Error($"{HarmonyId} loaded1 Fail");
+                MyLog.Error(e.ToString());
+                MyLog.Error($"{HarmonyId} loaded1 Fail");
                 //throw;
             }
         }

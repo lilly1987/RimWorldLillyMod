@@ -21,12 +21,12 @@ namespace Lilly
         // LoadingVars ResolvingCrossRefs PostLoadInit
         public ModUI(ModContentPack content) : base(content)
         {
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ST +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ST");
 
             modUI = this;
             settings = GetSettings<Settings>();// 주의. MainSettings의 patch가 먼저 실행됨            
 
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ED +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ED");
         }
 
         public override string SettingsCategory()

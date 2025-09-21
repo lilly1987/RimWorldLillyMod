@@ -18,7 +18,7 @@ namespace Lilly
 
         public Settings()
         {
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ST +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ST");
             settings = this;
             HarmonyBase.settings = settings;
 
@@ -29,17 +29,17 @@ namespace Lilly
             new ResourcePodGenerate();
             new DrillTurret_LookForNewTarget();
 
-            Log.Warning($"+++ Lilly {this.GetType().Name}.ctor ED +++");
+            MyLog.Warning($"{this.GetType().Name}.ctor ED");
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Log.Warning($"+++ {this.GetType().Name}.ExposeData {Scribe.mode} ST +++");
+            MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ST");
             //if (Scribe.mode != LoadSaveMode.LoadingVars && Scribe.mode != LoadSaveMode.Saving)
             if (Scribe.mode != LoadSaveMode.LoadingVars && Scribe.mode != LoadSaveMode.Saving)
             {
-                Log.Warning($"+++ {this.GetType().Name}.ExposeData {Scribe.mode} ED 1 +++");
+                MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ED RT");
                 return;
             }
 
@@ -51,7 +51,7 @@ namespace Lilly
 
             HarmonyBase.exposeData?.Invoke();
 
-            Log.Warning($"+++ {this.GetType().Name}.ExposeData {Scribe.mode} ED 2 +++");
+            MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ED OK");
         }
 
 
