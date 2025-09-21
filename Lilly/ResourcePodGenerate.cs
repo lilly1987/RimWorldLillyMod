@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Verse;
 using static HarmonyLib.Code;
 
@@ -14,11 +15,40 @@ namespace Lilly
     // 정상 작동
     public class ResourcePodGenerate : HarmonyBase
     {
-        public override string harmonyId => "com.Lilly.ResourcePodGenerate";
+        public override string harmonyId => "Lilly.ResourcePodGenerate";
+
+        public override string label => "ResourcePodGenerate";
+
+        public static float resourcePodGenerateMin = 10000f;
+        public static float resourcePodGenerateMax = 1000000f;
+        public static int resourcePodGenerateStackMin = 100;
+        public static int resourcePodGenerateStackMax = 10000;
+        public static int resourcePodGeneratePodMax = 100;
+
+        public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+        {
+
+            listing.CheckboxLabeled("자원포드 변경 적용 패치".Translate(), ref onPatch, ".".Translate());
+            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMin, "총 시장가치 최소");
+            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMax, "총 시장가치 최대");
+            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMin, "포드별 스택 최소");
+            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMax, "포드별 스택 최대");
+            ModUI.TextFieldNumeric(listing, ref resourcePodGeneratePodMax, "포드 갯수 최대");
+            listing.GapLine();
+        }
+
+        public override void ExposeData()
+        {
+            TogglePatch();
+            Scribe_Values.Look(ref resourcePodGenerateMin, "resourcePodGenerateMin");
+            Scribe_Values.Look(ref resourcePodGenerateMax, "resourcePodGenerateMax");
+            Scribe_Values.Look(ref resourcePodGenerateStackMin, "resourcePodGenerateStackMin");
+            Scribe_Values.Look(ref resourcePodGenerateStackMax, "resourcePodGenerateStackMax");
+            Scribe_Values.Look(ref resourcePodGeneratePodMax, "resourcePodGeneratePodMax");
+        }
 
         public override void Patch()
-        {
-            
+        {            
             harmony = new Harmony(harmonyId);
             var original = AccessTools.Method(typeof(ThingSetMaker_ResourcePod), "Generate"
                 , new Type[] { typeof(ThingSetMakerParams) ,typeof(List<Thing>) });
@@ -44,12 +74,12 @@ namespace Lilly
                     {
                         Log.Warning($"+++ {Id} succ1 +++");
                         //instruction.operand = 10000f;
-                        instruction.operand = MainSettings.settings.resourcePodGenerateMin;
+                        instruction.operand = resourcePodGenerateMin;
                     }
                     else if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 600f)
                     {
                         Log.Warning($"+++ {Id} succ2 +++");
-                        instruction.operand = MainSettings.settings.resourcePodGenerateMax;
+                        instruction.operand = resourcePodGenerateMax;
                     }
 
                     // 포드별 갯수 범위
@@ -57,13 +87,13 @@ namespace Lilly
                     {
                         Log.Warning($"+++ {Id} succ3 +++");
                         instruction.opcode = OpCodes.Ldc_I4;
-                        instruction.operand = MainSettings.settings.resourcePodGenerateStackMin;
+                        instruction.operand = resourcePodGenerateStackMin;
                     }
                     else if (instruction.opcode == OpCodes.Ldc_I4_S && instruction.operand is sbyte sb2 && sb2 == 40)
                     {
                         Log.Warning($"+++ {Id} succ4 +++");
                         instruction.opcode = OpCodes.Ldc_I4;
-                        instruction.operand = MainSettings.settings.resourcePodGenerateStackMax;
+                        instruction.operand = resourcePodGenerateStackMax;
                     }
 
                     // 포드 최대 갯수
@@ -71,7 +101,7 @@ namespace Lilly
                     {
                         Log.Warning($"+++ {Id} succ5 +++");
                         instruction.opcode = OpCodes.Ldc_I4;
-                        instruction.operand = MainSettings.settings.resourcePodGeneratePodMax;
+                        instruction.operand = resourcePodGeneratePodMax;
                     }                        
                 }
                 catch (Exception e)

@@ -13,7 +13,7 @@ namespace Lilly
     //[StaticConstructorOnStartup]
     public static class DeepDrill
     {
-        const string HarmonyId = "com.Lilly.DeepDrill";
+        const string HarmonyId = "Lilly.DeepDrill";
         static Harmony harmony;
 
         public static int cnt = 20000;

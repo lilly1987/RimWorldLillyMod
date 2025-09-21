@@ -14,7 +14,7 @@ namespace Lilly
     [StaticConstructorOnStartup]
     public static class TradeAll
     {
-        const string HarmonyId = "com.Lilly.TradeAll";
+        const string HarmonyId = "Lilly.TradeAll";
         //static Harmony harmony;
 
         static TradeAll()

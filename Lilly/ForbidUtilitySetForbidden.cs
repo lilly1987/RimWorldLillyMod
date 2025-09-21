@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime;
 using System.Text;
@@ -16,7 +17,15 @@ namespace Lilly
 {
     public class ForbidUtilitySetForbidden : HarmonyBase
     {
-        public override string harmonyId => "com.Lilly.ForbidUtilitySetForbidden";
+        public override string harmonyId => "Lilly.ForbidUtilitySetForbidden";
+
+        public override string label => "ForbidUtilitySetForbidden";
+
+        public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+        {
+            listing.CheckboxLabeled("상호작용 활성화 패치".Translate(), ref onPatch, "상호작용 기본값이 활성상태로 기본 적용".Translate());
+            listing.GapLine();
+        }
 
         public override void Patch()
         {

@@ -13,7 +13,7 @@ namespace Lilly
     //[StaticConstructorOnStartup]
     public static class DropPodUtilityForceForbid
     {
-        const string HarmonyId = "com.Lilly.DropPodUtility";
+        const string HarmonyId = "Lilly.DropPodUtility";
         static Harmony harmony;
 
         static DropPodUtilityForceForbid()
