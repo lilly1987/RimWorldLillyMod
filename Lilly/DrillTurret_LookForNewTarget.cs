@@ -17,15 +17,19 @@ namespace Lilly
 
         public override string label => "DrillTurret_LookForNewTarget";
 
+        public static bool onSight = true;
+
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
             listing.CheckboxLabeled("DrillTurret 범위 무제한 적용 패치".Translate(), ref onPatch, ".".Translate());
+            listing.CheckboxLabeled("시야 무시".Translate(), ref onSight, ".".Translate());
             listing.GapLine();
         }
 
         public override void ExposeData()
         {
             TogglePatch();
+            Scribe_Values.Look(ref onSight, "onSight", true);
         }
 
         public override void Patch()
@@ -48,19 +52,13 @@ namespace Lilly
                 new Type[] { typeof(IntVec3) });
             MyLog.Warning("TargetPosition");
             targetPosProp = AccessTools.Field(drillTurretType, "TargetPosition");
-            //MyLog.Warning("TrueCenter");
-            //trueCenterMethod = AccessTools.Method(drillTurretType, "TrueCenter");
-            //MyLog.Warning("turretTopRotation");
-            //turretTopRotationField = AccessTools.Field(drillTurretType, "turretTopRotation");
 
             // miningMode 필드 추출
             miningModeField = AccessTools.Field(drillTurretType, "miningMode");
             MyLog.Warning("end");
 
-            //if (targetMethod == null || isValidTargetAt == null || targetPosProp == null || trueCenterMethod == null || turretTopRotationField == null)
             if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null )
             {
-                //MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{targetMethod == null}, {isValidTargetAt == null} , {targetPosProp == null} , { trueCenterMethod == null} , {turretTopRotationField == null}");
                 MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{lookForNewTarget == null}, {isValidTargetAt == null} , {targetPosProp == null} ");
                 return;
             }
@@ -76,12 +74,10 @@ namespace Lilly
 
         }
 
-        public static Type drillTurretType;// 
-        public static MethodInfo isValidTargetAt;// = AccessTools.Method(drillTurretType, "isValidTargetAt");
-        public static FieldInfo targetPosProp;// = AccessTools.Property(drillTurretType, "TargetPosition");
-        public static FieldInfo miningModeField;// = AccessTools.Property(drillTurretType, "TargetPosition");
-        //public static MethodInfo trueCenterMethod;// = AccessTools.Method(drillTurretType, "TrueCenter");
-        //public static FieldInfo turretTopRotationField;// = AccessTools.Field(drillTurretType, "turretTopRotation");
+        public static Type drillTurretType;
+        public static MethodInfo isValidTargetAt;
+        public static FieldInfo targetPosProp;
+        public static FieldInfo miningModeField;
 
         public static bool Prefix(object __instance, out IntVec3 newTargetPosition,ref float ___turretTopRotation,bool ___designatedOnly)
         {
@@ -95,18 +91,25 @@ namespace Lilly
 
             // 맵 전체 셀 무작위 순회
             bool isValid=false;
-            
 
+            var designated = new List<IntVec3>();
+            var fallback = new List<IntVec3>();
 
-            foreach (var cell in map.AllCells.InRandomOrder())
+            foreach (var cell in map.AllCells)
             {
-                //Building edifice = cell.GetEdifice(map);
-                //if (edifice == null || !edifice.def.mineable)
-                //    continue;
+                Building edifice = cell.GetEdifice(map);
+                if (edifice == null || !edifice.def.mineable)
+                    continue;
 
-                //if (___designatedOnly && map.designationManager.DesignationAt(cell, DesignationDefOf.Mine) == null)
-                //    continue;
+                if (map.designationManager.DesignationAt(cell, DesignationDefOf.Mine) != null)
+                    designated.Add(cell);
+                else
+                    fallback.Add(cell);
+            }
 
+            //foreach (var cell in map.AllCells.InRandomOrder())
+            foreach (var cell in designated.InRandomOrder())
+            {
                 //bool isValid = (bool)isValidTargetAt.Invoke(__instance, new object[] { cell });
                 MyisValidTargetAt(__instance,ref isValid, cell , ___designatedOnly,  miningMode);
                 if (isValid)
@@ -115,6 +118,17 @@ namespace Lilly
                     break;
                 }
             }
+            if (!newTargetPosition.IsValid)
+                foreach (var cell in fallback.InRandomOrder())
+                {
+                    //bool isValid = (bool)isValidTargetAt.Invoke(__instance, new object[] { cell });
+                    MyisValidTargetAt(__instance, ref isValid, cell, ___designatedOnly, miningMode);
+                    if (isValid)
+                    {
+                        newTargetPosition = cell;
+                        break;
+                    }
+                }
 
             // 타겟이 유효하면 회전 처리
             if (newTargetPosition.IsValid)
@@ -144,11 +158,12 @@ namespace Lilly
             var thing = __instance as Thing;
             var map = thing.Map;
 
-            //if (!GenSight.LineOfSight(base.Position, position, base.Map, false, null, 0, 0))
-            //{
-            //    __result= false;
-            //    return false;
-            //}
+
+            if ( !onSight && !GenSight.LineOfSight(position, position, map, false, null, 0, 0))
+            {
+                __result = false;
+                return false;
+            }
             if (___designatedOnly && map.designationManager.DesignationAt(position, DesignationDefOf.Mine) == null)
             {
                 __result = false;
