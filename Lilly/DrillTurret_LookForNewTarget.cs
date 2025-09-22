@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -48,29 +49,39 @@ namespace Lilly
                 new Type[] { typeof(IntVec3).MakeByRefType() } );
 
             MyLog.Warning("isValidTargetAt");
-            isValidTargetAt = AccessTools.Method(drillTurretType, "isValidTargetAt",
-                new Type[] { typeof(IntVec3) });
+            isValidTargetAt = AccessTools.Method(drillTurretType, "isValidTargetAt", new Type[] { typeof(IntVec3) });
+
             MyLog.Warning("TargetPosition");
             targetPosProp = AccessTools.Field(drillTurretType, "TargetPosition");
 
             // miningMode 필드 추출
+            MyLog.Warning("miningMode");
             miningModeField = AccessTools.Field(drillTurretType, "miningMode");
+
+            MyLog.Warning("laserBeamTexture");
+            laserTextureField = AccessTools.Field(drillTurretType, "laserBeamTexture");
+
+            MyLog.Warning("computeDrawingParameters");
+            MethodInfo computeDrawingParameters = AccessTools.Method(drillTurretType, "computeDrawingParameters", new Type[] { });
             MyLog.Warning("end");
 
-            if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null )
+            if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null || computeDrawingParameters==null)
             {
-                MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{lookForNewTarget == null}, {isValidTargetAt == null} , {targetPosProp == null} ");
+                MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{lookForNewTarget == null}, {isValidTargetAt == null} , {targetPosProp == null}, {computeDrawingParameters == null} ");
                 return;
             }
 
             // Prefix 메서드 정의
-            MethodInfo prefixMethod = typeof(DrillTurret_LookForNewTarget).GetMethod("Prefix", BindingFlags.Static | BindingFlags.Public);
-            MethodInfo prefixMethod2 = typeof(DrillTurret_LookForNewTarget).GetMethod("MyisValidTargetAt", BindingFlags.Static | BindingFlags.Public);
 
             // 패치 적용
+            MethodInfo prefixMethod = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(Prefix), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(lookForNewTarget, prefix: new HarmonyMethod(prefixMethod));
 
+            MethodInfo prefixMethod2 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(MyisValidTargetAt), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(isValidTargetAt, prefix: new HarmonyMethod(prefixMethod2));
+
+            MethodInfo prefixMethod3 = typeof(DrillTurret_LookForNewTarget).GetMethod("Prefix2", BindingFlags.Static | BindingFlags.Public);
+            harmony.Patch(computeDrawingParameters, prefix: new HarmonyMethod(prefixMethod3));
 
         }
 
@@ -78,6 +89,12 @@ namespace Lilly
         public static MethodInfo isValidTargetAt;
         public static FieldInfo targetPosProp;
         public static FieldInfo miningModeField;
+        public static FieldInfo laserTextureField;
+        
+        public static bool Prefix2()
+        {
+            return false;
+        }
 
         public static bool Prefix(object __instance, out IntVec3 newTargetPosition,ref float ___turretTopRotation,bool ___designatedOnly)
         {
@@ -86,6 +103,7 @@ namespace Lilly
             // 캐스팅
             var thing = __instance as Thing;
             var map = thing.Map;
+            var position = thing.Position;
 
             var miningMode = (MiningMode)miningModeField.GetValue(__instance);
 
@@ -95,33 +113,34 @@ namespace Lilly
             var designated = new List<IntVec3>();
             var fallback = new List<IntVec3>();
 
-            foreach (var cell in map.AllCells)
+            //foreach (var cell in map.AllCells)
+            foreach (var cell in map.listerThings.AllThings
+                .OfType<Building>()
+                .Where(b => b.def.mineable)
+                .OrderBy(b => b.Position.DistanceToSquared(position))
+                )
             {
-                Building edifice = cell.GetEdifice(map);
-                if (edifice == null || !edifice.def.mineable)
-                    continue;
-
-                if (map.designationManager.DesignationAt(cell, DesignationDefOf.Mine) != null)
-                    designated.Add(cell);
+                if (map.designationManager.DesignationAt(cell.Position, DesignationDefOf.Mine) != null)
+                    designated.Add(cell.Position);
                 else
-                    fallback.Add(cell);
+                    fallback.Add(cell.Position);
             }
 
-            //foreach (var cell in map.AllCells.InRandomOrder())
-            foreach (var cell in designated.InRandomOrder())
+            foreach (var cell in designated)
             {
-                //bool isValid = (bool)isValidTargetAt.Invoke(__instance, new object[] { cell });
-                MyisValidTargetAt(__instance,ref isValid, cell , ___designatedOnly,  miningMode);
+                MyisValidTargetAt(__instance, ref isValid, cell, ___designatedOnly, miningMode);
                 if (isValid)
                 {
                     newTargetPosition = cell;
                     break;
-                }
+                }                
             }
+
+            // 지시된 셀에서 못 찾았으면 일반 셀 탐색
             if (!newTargetPosition.IsValid)
-                foreach (var cell in fallback.InRandomOrder())
+            {
+                foreach (var cell in fallback)
                 {
-                    //bool isValid = (bool)isValidTargetAt.Invoke(__instance, new object[] { cell });
                     MyisValidTargetAt(__instance, ref isValid, cell, ___designatedOnly, miningMode);
                     if (isValid)
                     {
@@ -129,12 +148,12 @@ namespace Lilly
                         break;
                     }
                 }
+            }
 
             // 타겟이 유효하면 회전 처리
             if (newTargetPosition.IsValid)
             {
                 var targetPos = (IntVec3)targetPosProp.GetValue(__instance);
-                //var trueCenter = (Vector3)trueCenterMethod.Invoke(__instance, null);
                 float angle = (targetPos.ToVector3Shifted() - thing.TrueCenter()).AngleFlat();
                 ___turretTopRotation = Mathf.Repeat(angle, 360f);
             }
