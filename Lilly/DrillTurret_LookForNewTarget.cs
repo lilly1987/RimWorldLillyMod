@@ -19,18 +19,29 @@ namespace Lilly
         public override string label => "DrillTurret_LookForNewTarget";
 
         public static bool onSight = true;
+        public static float drillDamage = 10f;
+
+        public static DrillTurret_LookForNewTarget self;
+
+        public DrillTurret_LookForNewTarget():base()
+        {
+            self = this;
+        }
 
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
-            listing.CheckboxLabeled("DrillTurret 범위 무제한 적용 패치".Translate(), ref onPatch, ".".Translate());
-            listing.CheckboxLabeled("시야 무시".Translate(), ref onSight, ".".Translate());
+            listing.CheckboxLabeled("DrillTurret 패치".Translate(), ref onPatch, "범위 무제한,공격 배율,".Translate());
+            listing.CheckboxLabeled("시야 무시".Translate(), ref onSight, ".".Translate());            
+            ModUI.TextFieldNumeric<float>(listing, ref drillDamage, "드릴 공격력 배율", "");
             listing.GapLine();
         }
 
         public override void ExposeData()
         {
-            TogglePatch();
+            TogglePatch(true);
             Scribe_Values.Look(ref onSight, "onSight", true);
+            Scribe_Values.Look(ref onDebug, "onDebug", true);
+            Scribe_Values.Look(ref drillDamage, "drillDamage", 1f);
         }
 
         public override void Patch()
@@ -63,9 +74,13 @@ namespace Lilly
 
             MyLog.Warning("computeDrawingParameters");
             MethodInfo computeDrawingParameters = AccessTools.Method(drillTurretType, "computeDrawingParameters", new Type[] { });
+
+            MyLog.Warning("drillRock");
+            MethodInfo drillRock = AccessTools.Method(drillTurretType, "drillRock", new Type[] { });
+
             MyLog.Warning("end");
 
-            if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null || computeDrawingParameters==null)
+            if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null || computeDrawingParameters==null|| drillRock == null)
             {
                 MyLog.Error($"[DrillTurretPatch] 필요한 메서드 또는 필드를 찾을 수 없습니다.{lookForNewTarget == null}, {isValidTargetAt == null} , {targetPosProp == null}, {computeDrawingParameters == null} ");
                 return;
@@ -80,8 +95,11 @@ namespace Lilly
             MethodInfo prefixMethod2 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(MyisValidTargetAt), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(isValidTargetAt, prefix: new HarmonyMethod(prefixMethod2));
 
-            MethodInfo prefixMethod3 = typeof(DrillTurret_LookForNewTarget).GetMethod("Prefix2", BindingFlags.Static | BindingFlags.Public);
+            MethodInfo prefixMethod3 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(Prefix2), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(computeDrawingParameters, prefix: new HarmonyMethod(prefixMethod3));
+
+            MethodInfo prefixMethod4 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(DrillRock), BindingFlags.Static | BindingFlags.Public);
+            harmony.Patch(drillRock, prefix: new HarmonyMethod(prefixMethod4));
 
         }
 
@@ -91,6 +109,13 @@ namespace Lilly
         public static FieldInfo miningModeField;
         public static FieldInfo laserTextureField;
         
+        public static void DrillRock(ref int ___drillDamageAmount)
+        {
+            ___drillDamageAmount = (int)(___drillDamageAmount * drillDamage);
+            if (self.onDebug)
+            MyLog.Warning($"___drillDamageAmount : {___drillDamageAmount}");
+        }
+
         public static bool Prefix2()
         {
             return false;
