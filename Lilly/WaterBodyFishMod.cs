@@ -16,17 +16,25 @@ namespace Lilly
     public class WaterBodyFishMod : HarmonyBase
     {
 
-        public static int maxFishPopulation = 1000000;
         
         public override string label => "WaterBodyFishMod"; 
 
         public override string harmonyId => "Lilly.WaterBody";
 
+        public static WaterBodyFishMod self;
+
+        public static int maxFishPopulation = 1000000;
+
         string tmp;
 
+        public WaterBodyFishMod() : base() {
+            self = this;
+        }
+        
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
-            listing.CheckboxLabeled("물고기 패치".Translate(), ref onPatch, "해당 맵에서 사용 가능한 물고기 타입 무조건 적용. 새로운 맵 만들때 적용.".Translate());
+            base.DoSettingsWindowContents(inRect, listing);
+                        
             listing.Label("물고기 최대 개체수 설정".Translate(), tipSignal: "위 패치에 적용. 또는 아래 적용을 눌러야 적용.".Translate());
             tmp = maxFishPopulation.ToString();
             listing.TextFieldNumeric(ref maxFishPopulation, ref tmp);
@@ -52,7 +60,6 @@ namespace Lilly
                 WaterBodyFishMod.GetAllFishDefs();
             }
             ;
-            listing.GapLine();
         }
 
         public override void Patch()
@@ -61,8 +68,9 @@ namespace Lilly
             var Prefix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.PreSetFishTypes));
             harmony.Patch(original, Prefix);
 
-            original = AccessTools.Method(typeof(ScribeLoader), "InitLoading");
-            var postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.PostInitLoading));
+            //original = AccessTools.Method(typeof(ScribeLoader), "InitLoading");// RWAutoSell에서 자꾸 호출해대서 수정 필요
+            original = AccessTools.Method(typeof(SavedGameLoaderNow), "LoadGameFromSaveFileNow");// RWAutoSell에서 자꾸 호출해대서 수정 필요
+            var postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.All));
             harmony.Patch(original, postfix: postfix);
 
             var original2 = AccessTools.Constructor(typeof(Zone_Fishing), new[] { typeof(ZoneManager) });
@@ -73,16 +81,12 @@ namespace Lilly
 
         public override void ExposeData()
         {
+            base.ExposeData();
+
             Scribe_Values.Look(ref maxFishPopulation, "maxFishPopulation");
             WaterBodyFishMod.All();
         }
 
-        public static void PostInitLoading()
-        {
-            All();
-        }
-
-        //[HarmonyPrefix]
         public static bool PreSetFishTypes(WaterBody __instance)
         {
             if (__instance.map.Biome.fishTypes == null)
@@ -126,20 +130,20 @@ namespace Lilly
             if (Find.Maps == null) return;
             foreach (var map in Find.Maps)
             {
-                MyLog.Warning($"WaterBody All start");                
-                MyLog.Warning($"maxFishPopulation {map.TileInfo.PrimaryBiome.maxFishPopulation}");                
-                MyLog.Warning($"Bodies {map.waterBodyTracker.Bodies.Count}");                
+                MyLog.Warning($"WaterBody All start",print: self.onDebug);                
+                MyLog.Warning($"maxFishPopulation {map.TileInfo.PrimaryBiome.maxFishPopulation}", print: self.onDebug);                
+                MyLog.Warning($"Bodies {map.waterBodyTracker.Bodies.Count}", print: self.onDebug);                
                 foreach (var waterBody in map.waterBodyTracker.Bodies)
                 {
                     waterBody.SetFishTypes();
                 }
-                MyLog.Warning($"WaterBody All End");                
+                MyLog.Warning($"WaterBody All End", print: self.onDebug);                
             }
         }
 
         public static  void GetAllFishDefs()//List<ThingDef>
         {
-            MyLog.Warning($"{ThingCategoryDefOf.Fish.childThingDefs.Count}");
+            MyLog.Warning($"{ThingCategoryDefOf.Fish.childThingDefs.Count}", print: self.onDebug);
             foreach(var t in ThingCategoryDefOf.Fish.childThingDefs)
             {
                 MyLog.Warning($"{t.description}");

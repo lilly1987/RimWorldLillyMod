@@ -34,24 +34,25 @@ namespace Lilly
 
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
-
-            listing.CheckboxLabeled("자원포드 변경 적용 패치".Translate(), ref onPatch, ".".Translate());
+            base.DoSettingsWindowContents(inRect, listing);
+            
             ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMin, "총 시장가치 최소");
             ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMax, "총 시장가치 최대");
             ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMin, "포드별 스택 최소");
             ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMax, "포드별 스택 최대");
             ModUI.TextFieldNumeric(listing, ref resourcePodGeneratePodMax, "포드 갯수 최대");
-            listing.GapLine();
+            
         }
 
         public override void ExposeData()
         {
-            TogglePatch();
+            base.ExposeData();
             Scribe_Values.Look(ref resourcePodGenerateMin, "resourcePodGenerateMin");
             Scribe_Values.Look(ref resourcePodGenerateMax, "resourcePodGenerateMax");
             Scribe_Values.Look(ref resourcePodGenerateStackMin, "resourcePodGenerateStackMin");
             Scribe_Values.Look(ref resourcePodGenerateStackMax, "resourcePodGenerateStackMax");
             Scribe_Values.Look(ref resourcePodGeneratePodMax, "resourcePodGeneratePodMax");
+            TogglePatch();
         }
 
         public override void Patch()

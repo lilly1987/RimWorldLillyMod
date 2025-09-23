@@ -30,6 +30,8 @@ namespace Lilly
 
         public static void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
+            listing.GapLine();
+
             listing.Label("자원 운석 최소 갯수".Translate(), tipSignal: ".".Translate());
             tmp = countRangeMin.ToString();
             listing.TextFieldNumeric(ref countRangeMin, ref tmp);
@@ -38,7 +40,6 @@ namespace Lilly
             tmp = countRangeMax.ToString();
             listing.TextFieldNumeric(ref countRangeMax, ref tmp);
 
-            listing.GapLine();
         }
 
         public static void ExposeData()

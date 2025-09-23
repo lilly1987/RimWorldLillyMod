@@ -21,11 +21,10 @@ namespace Lilly
 
         public override string label => "ForbidUtilitySetForbidden";
 
-        public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
-        {
-            listing.CheckboxLabeled("상호작용 활성화 패치".Translate(), ref onPatch, "상호작용 기본값이 활성상태로 기본 적용".Translate());
-            listing.GapLine();
-        }
+        //public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+        //{
+        //    base.DoSettingsWindowContents(inRect, listing);
+        //}
 
         public override void Patch()
         {

@@ -23,6 +23,7 @@ namespace Lilly
 
         public static Settings settings;
         public abstract string label { get;  }
+        public virtual string tooltip { get; } = ".";
         public abstract string harmonyId { get;  } 
         public virtual Harmony harmony { get; set; } = null;
 
@@ -41,13 +42,21 @@ namespace Lilly
                 MyLog.Warning($"{this.GetType().Name}.ctor ED {allHarmonyBases.Count}");
 
         }
-        public virtual void DoSettingsWindowContents(Rect inRect, Listing_Standard listing) { }
+
+        public virtual void DoSettingsWindowContents(Rect inRect, Listing_Standard listing) {
+            listing.GapLine();
+            listing.CheckboxLabeled($"{label} 패치".Translate(), ref onPatch, tooltip.Translate());
+            listing.CheckboxLabeled($"{label} Debug", ref onDebug, ".");
+        }
 
         /// <summary>
         /// 하모니 패치 필요시 여기에 TogglePatch 호출 넣기
         /// 패치할 내용은 Patch() 에 작성
         /// </summary>
-        public virtual void ExposeData() { }
+        public virtual void ExposeData() {
+            Scribe_Values.Look(ref onPatch, "onPatch", true);
+            Scribe_Values.Look(ref onDebug, "onDebug", false);
+        }
 
 
         public virtual void Patch() 

@@ -13,12 +13,12 @@ using Verse.AI;
 
 namespace Lilly
 {
-    public class PawnHealthStateDown : HarmonyBase
+    public class CaptureThemPatch : HarmonyBase
     {
-        public static PawnHealthStateDown self;
+        public static CaptureThemPatch self;
         public static DesignationDef def;
 
-        public PawnHealthStateDown()
+        public CaptureThemPatch()
         {
             self= this;
 
@@ -26,34 +26,33 @@ namespace Lilly
             def.texturePath = "CaptureThemDesignation";
             def.targetType= TargetType.Thing;
         }
-        public override string harmonyId => "Lilly.PawnHealthStateDown";
+        public override string harmonyId => "Lilly.CaptureThem";
 
-        public override string label => "PawnHealthStateDown";
+        public override string label => "CaptureThem";
 
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
-            listing.CheckboxLabeled("PawnHealthStateDown 패치".Translate(), ref onPatch, "CaptureThem 모드 필요.".Translate());
-            listing.CheckboxLabeled("PawnHealthStateDown debug".Translate(), ref onPatch, ".".Translate());
-            listing.GapLine();
+            base.DoSettingsWindowContents(inRect, listing);
+            //listing.CheckboxLabeled("PawnHealthStateDown 패치".Translate(), ref onPatch, "CaptureThem 모드 필요.".Translate());
         }
 
         public override void ExposeData()
         {
+            base.ExposeData();
             TogglePatch();
-            Scribe_Values.Look(ref onDebug, "PawnHealthStateDownDebug", false);
         }
 
         public override void Patch()
         {
             harmony = new Harmony(harmonyId);
             var original = AccessTools.Method(typeof(Pawn_HealthTracker), "CheckForStateChange");
-            var Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(CheckForStateChange));
+            var Prefix = new HarmonyMethod(typeof(CaptureThemPatch), nameof(CheckForStateChange));
             //harmony.Patch(original, Prefix);
             original = AccessTools.Method(typeof(Pawn_HealthTracker), "ShouldBeDowned");
-            Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(ShouldBeDowned));
+            Prefix = new HarmonyMethod(typeof(CaptureThemPatch), nameof(ShouldBeDowned));
             //harmony.Patch(original, Prefix);
             original = AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned");
-            Prefix = new HarmonyMethod(typeof(PawnHealthStateDown), nameof(MakeDowned));
+            Prefix = new HarmonyMethod(typeof(CaptureThemPatch), nameof(MakeDowned));
             harmony.Patch(original, Prefix);
         }
 
@@ -64,7 +63,7 @@ namespace Lilly
             if (___pawn == null || pawn != ___pawn) return;
             var pawn_ = ___pawn;
             
-                if (PawnHealthStateDown.self.onDebug)
+                if (CaptureThemPatch.self.onDebug)
                     MyLog.Warning($"[+CheckForStateChange+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
 
                 pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
@@ -83,7 +82,7 @@ namespace Lilly
                 && pawn_.Faction.HostileTo(Faction.OfPlayer)
                 )
             {
-                if (PawnHealthStateDown.self.onDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
+                if (CaptureThemPatch.self.onDebug && pawn_.Faction.HostileTo(Faction.OfPlayer))
                     MyLog.Warning($"[+ShouldBeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
 
                 pawn = pawn_;
@@ -103,7 +102,7 @@ namespace Lilly
                 && pawn_.Faction.HostileTo(Faction.OfPlayer)
                 )
             {
-                if (PawnHealthStateDown.self.onDebug) 
+                if (CaptureThemPatch.self.onDebug) 
                     MyLog.Warning($"[+MakeDowned+] {pawn_.Name} , {pawn_.Downed} , {!pawn_.InBed()} , {!pawn_.IsPrisonerOfColony} , {pawn_.RaceProps.Humanlike} , {pawn_.Faction.HostileTo(Faction.OfPlayer)}");
                 //pawn_.Map.designationManager.AddDesignation(new Designation(pawn_, def, null));
                 //Job job = JobMaker.MakeJob(JobDefOf.Capture, pawn);

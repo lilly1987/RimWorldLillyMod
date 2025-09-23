@@ -31,19 +31,21 @@ namespace Lilly
 
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
-            listing.CheckboxLabeled("DrillTurret 패치".Translate(), ref onPatch, "범위 무제한,공격 배율,".Translate());
-            listing.CheckboxLabeled("디버그".Translate(), ref onDebug, ".".Translate());            
+            base.DoSettingsWindowContents(inRect, listing);
+            
             listing.CheckboxLabeled("시야 무시".Translate(), ref onSight, ".".Translate());            
             ModUI.TextFieldNumeric<float>(listing, ref drillDamage, "드릴 공격력 배율", "");
-            listing.GapLine();
+            
         }
 
         public override void ExposeData()
         {
-            TogglePatch(true);
+            base.ExposeData();
+
             Scribe_Values.Look(ref onSight, "onSight", true);
-            Scribe_Values.Look(ref onDebug, "onDebug", false);
             Scribe_Values.Look(ref drillDamage, "drillDamage", 1f);
+
+            TogglePatch(true);
         }
 
         public override void Patch()

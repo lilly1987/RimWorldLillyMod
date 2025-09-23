@@ -47,15 +47,15 @@ namespace Lilly
             listing.Begin(rect);
 
             listing.CheckboxLabeled("DebugMode", ref Settings.DebugMode, ".");
-            listing.GapLine();
 
-            listing.CheckboxLabeled("DrillCache Debug", ref DrillCache.DebugMode, ".");
             listing.GapLine();
+            listing.CheckboxLabeled("DrillCache Debug", ref DrillCache.DebugMode, ".");
 
             MeteoriteMineables.DoSettingsWindowContents(inRect, listing);
 
             HarmonyBase.doSettingsWindowContents?.Invoke(inRect, listing);
 
+            listing.GapLine();
             listing.End();
             Widgets.EndScrollView();
 

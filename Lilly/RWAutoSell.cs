@@ -20,32 +20,31 @@ public class RWAutoSell_Patch : HarmonyBase
 {
     public override string harmonyId => "Lilly.RWAutoSell";
 
-    public override string label => throw new System.NotImplementedException();
+    public override string label =>"RWAutoSell";
 
     public new bool onPatch = false;
+
+    public static RWAutoSell_Patch self;
 
     public static List<IRule> ruleList = new List<IRule>();
 
     public static Map tmpmap;
-    public static RWAutoSell_Patch self;
 
-    public RWAutoSell_Patch()
+    public RWAutoSell_Patch() : base()
     {
         self = this;
     }
 
+    //public override void ExposeData()
+    //{
+    //    Scribe_Values.Look(ref onDebug, "onDebug", false);
+    //}
 
-    public override void ExposeData()
-    {
-
-        Scribe_Values.Look(ref onDebug, "onDebug", false);
-    }
-
-    public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
-    {
-        listing.CheckboxLabeled("RWAutoSell_Patch Debug", ref onDebug, ".");
-        listing.GapLine();
-    }
+    //public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+    //{
+    //    listing.CheckboxLabeled("RWAutoSell_Patch Debug", ref onDebug, ".");
+    //    listing.GapLine();
+    //}
 
     [HarmonyPatch(typeof(SavedGameLoaderNow), nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow))]
     public static class Patch_LoadGame
