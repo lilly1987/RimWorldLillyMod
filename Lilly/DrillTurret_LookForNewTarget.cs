@@ -23,6 +23,7 @@ namespace Lilly
 
         public static DrillTurret_LookForNewTarget self;
 
+
         public DrillTurret_LookForNewTarget():base()
         {
             self = this;
@@ -60,26 +61,33 @@ namespace Lilly
             MethodInfo lookForNewTarget = AccessTools.Method(drillTurretType, "lookForNewTarget",
                 new Type[] { typeof(IntVec3).MakeByRefType() } );
 
-            MyLog.Warning("isValidTargetAt");
+            if (self.onDebug)
+                MyLog.Warning("isValidTargetAt");
             isValidTargetAt = AccessTools.Method(drillTurretType, "isValidTargetAt", new Type[] { typeof(IntVec3) });
 
-            MyLog.Warning("TargetPosition");
+            if (self.onDebug)
+                MyLog.Warning("TargetPosition");
             targetPosProp = AccessTools.Field(drillTurretType, "TargetPosition");
 
             // miningMode 필드 추출
-            MyLog.Warning("miningMode");
+            if (self.onDebug)
+                MyLog.Warning("miningMode");
             miningModeField = AccessTools.Field(drillTurretType, "miningMode");
 
-            MyLog.Warning("laserBeamTexture");
+            if (self.onDebug)
+                MyLog.Warning("laserBeamTexture");
             laserTextureField = AccessTools.Field(drillTurretType, "laserBeamTexture");
 
-            MyLog.Warning("computeDrawingParameters");
+            if (self.onDebug)
+                MyLog.Warning("computeDrawingParameters");
             MethodInfo computeDrawingParameters = AccessTools.Method(drillTurretType, "computeDrawingParameters", new Type[] { });
 
-            MyLog.Warning("drillRock");
+            if (self.onDebug)
+                MyLog.Warning("drillRock");
             MethodInfo drillRock = AccessTools.Method(drillTurretType, "drillRock", new Type[] { });
 
-            MyLog.Warning("end");
+            if (self.onDebug)
+                MyLog.Warning("end");
 
             if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null || computeDrawingParameters==null|| drillRock == null)
             {

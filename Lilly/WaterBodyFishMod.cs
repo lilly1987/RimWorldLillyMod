@@ -55,14 +55,6 @@ namespace Lilly
             listing.GapLine();
         }
 
-        //public FishRepeatMode repeatMode = FishRepeatMode.TargetCount;
-        //public FishRepeatMode repeatMode = FishRepeatMode.DoForever;
-
-        public static void AfterConstruct(Zone_Fishing __instance)
-        {
-            __instance.repeatMode = FishRepeatMode.DoForever;
-        }
-
         public override void Patch()
         {
             var original = AccessTools.Method(typeof(WaterBody), "SetFishTypes");
@@ -76,7 +68,6 @@ namespace Lilly
             var original2 = AccessTools.Constructor(typeof(Zone_Fishing), new[] { typeof(ZoneManager) });
             postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.AfterConstruct));
             harmony.Patch(original2, postfix: postfix);
-
             
         }
 
@@ -159,8 +150,12 @@ namespace Lilly
             //    .ToList();
         }
 
+        //public FishRepeatMode repeatMode = FishRepeatMode.TargetCount;
+        //public FishRepeatMode repeatMode = FishRepeatMode.DoForever;
 
-
-
+        public static void AfterConstruct(Zone_Fishing __instance)
+        {
+            __instance.repeatMode = FishRepeatMode.DoForever;
+        }
     }
 }

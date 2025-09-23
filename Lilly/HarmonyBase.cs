@@ -32,11 +32,13 @@ namespace Lilly
 
         public HarmonyBase()
         {
-            MyLog.Warning($"{this.GetType().Name}.ctor ST {allHarmonyBases.Count}");
+            if (Settings.DebugMode)
+                MyLog.Warning($"{this.GetType().Name}.ctor ST {allHarmonyBases.Count}");
             allHarmonyBases.Add(this);
             exposeData += ExposeData;
             doSettingsWindowContents+= DoSettingsWindowContents;
-            MyLog.Warning($"{this.GetType().Name}.ctor ED {allHarmonyBases.Count}");
+            if (Settings.DebugMode)
+                MyLog.Warning($"{this.GetType().Name}.ctor ED {allHarmonyBases.Count}");
 
         }
         public virtual void DoSettingsWindowContents(Rect inRect, Listing_Standard listing) { }
@@ -73,7 +75,8 @@ namespace Lilly
             MyLog.Warning($"{harmonyId} Patch ST {Scribe.mode} {force}");
             if (!force && Scribe.mode != LoadSaveMode.Saving)
             {
-                MyLog.Warning($"{harmonyId} Patch ED RT");
+                if (Settings.DebugMode)
+                    MyLog.Warning($"{harmonyId} Patch ED RT");
                 return;
             }
             harmony = new Harmony(harmonyId);
@@ -81,7 +84,8 @@ namespace Lilly
             {
                 //MyLog.Warning($"{harmonyId} Patch ST");
                 Patch();
-                MyLog.Warning($"{harmonyId} Patch ED OK");
+                if (Settings.DebugMode)
+                    MyLog.Warning($"{harmonyId} Patch ED OK");
             }
             catch (Exception e)
             {
@@ -98,10 +102,12 @@ namespace Lilly
             if (harmony == null) return;
             try
             {
-                MyLog.Warning($"{harmonyId} UnPatch ST");
+                if (Settings.DebugMode)
+                    MyLog.Warning($"{harmonyId} UnPatch ST");
                 harmony.UnpatchAll(harmonyId);
                 harmony = null;
-                MyLog.Warning($"{harmonyId} UnPatch ED");
+                if (Settings.DebugMode)
+                    MyLog.Warning($"{harmonyId} UnPatch ED");
             }
             catch (Exception e)
             {
