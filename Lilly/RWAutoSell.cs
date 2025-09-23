@@ -11,6 +11,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using UnityEngine;
 using Verse; // 림월드 기본 네임스페이스
 
 //[StaticConstructorOnStartup]
@@ -30,6 +32,19 @@ public class RWAutoSell_Patch : HarmonyBase
     public RWAutoSell_Patch()
     {
         self = this;
+    }
+
+
+    public override void ExposeData()
+    {
+
+        Scribe_Values.Look(ref onDebug, "onDebug", false);
+    }
+
+    public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
+    {
+        listing.CheckboxLabeled("RWAutoSell_Patch Debug", ref onDebug, ".");
+        listing.GapLine();
     }
 
     [HarmonyPatch(typeof(SavedGameLoaderNow), nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow))]
@@ -61,68 +76,108 @@ public class RWAutoSell_Patch : HarmonyBase
         [HarmonyPostfix]
         public static void Postfix(ASMapComp __instance)
         {
-             MyLog.Warning($"MapGenerated ST {__instance.map} {Find.Maps.Count} ", print: self.onDebug);
+            MyLog.Warning($"MapGenerated ST", print: self.onDebug);
 
-            var aSMapComp = __instance;
-            if (aSMapComp == null)
+            try
             {
-                MyLog.Error($"AddMap ASMapComp NULL");
-                return;
-            }
-            if (Find.Maps.Count == 1)
-            {
-                tmpmap = __instance.map;
-                foreach (var rule in ruleList)
+                MyLog.Warning($"map {__instance?.map}", print: self.onDebug);
+                MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count} ", print: self.onDebug);
+
+                var aSMapComp = __instance;
+                if (aSMapComp == null)
                 {
-                    aSMapComp.Add(rule.DeepCopy());
+                    MyLog.Error($"AddMap ASMapComp NULL");
+                    return;
                 }
-            }
-            else if (Find.Maps.Count > 1)
-            {
-                foreach (var rule in ASMapComp.GetSingleton(Find.Maps[Find.Maps.Count - 2]).EnumerateRules())
+                if (Find.Maps.Count == 1)
                 {
-                    aSMapComp.Add(rule.DeepCopy());
+                    tmpmap = __instance.map;
+                    foreach (var rule in ruleList)
+                    {
+                        aSMapComp.Add(rule.DeepCopy());
+                    }
                 }
+                else if (Find.Maps.Count > 1)
+                {
+                    foreach (var rule in ASMapComp.GetSingleton(Find.Maps[Find.Maps.Count - 2]).EnumerateRules())
+                    {
+                        aSMapComp.Add(rule.DeepCopy());
+                    }
+                }
+                MyLog.Warning($"aSMapComp.Rules.Count {aSMapComp.Rules.Count}", print: self.onDebug);
             }
-            MyLog.Warning($"MapGenerated ED {aSMapComp.Rules.Count}", print: self.onDebug);
+            catch (Exception e)
+            {
+                MyLog.Error(e.ToString());
+            }
+            MyLog.Warning($"MapGenerated ED", print: self.onDebug);
         }
     }
-/*
+
     [HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapRemoved))]
     public static class MapRemoved
     {
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void Postfix(ASMapComp __instance)
         {
-            MyLog.Warning($"MapRemoved ST {__instance.map} {Find.Maps.Count} ");
+            try
+            {
+                MyLog.Warning($"MapRemoved ST", print: self.onDebug);
+                MyLog.Warning($"__instance.Rules.Count {__instance?.Rules?.Count}", print: self.onDebug);
+                MyLog.Warning($"__instance.map {__instance?.map}", print: self.onDebug);
+                MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count}", print: self.onDebug);
+                if (Find.Maps?.Count == 0)
+                {
+                    ruleList.Clear();
+                    foreach (var rule in __instance.EnumerateRules())
+                    {
+                        ruleList.Add(rule.DeepCopy());
+                    }
+                }
 
-            MyLog.Warning($"MapRemoved ED {__instance.Rules.Count}");
+                MyLog.Warning($"__instance.Rules.Count {__instance?.Rules?.Count}", print: self.onDebug);
+            }
+            catch (Exception e)
+            {
+                MyLog.Error(e.ToString());
+            }
+            MyLog.Warning($"MapRemoved ED" , print: self.onDebug);
         }
     }
-*/
-    [HarmonyPatch(typeof(Game), nameof(Game.DeinitAndRemoveMap))]// 작동은 됨
+
+    //[HarmonyPatch(typeof(Game), nameof(Game.DeinitAndRemoveMap))]// 정상이지만 중복이라 제거
     public static class Patch_RemoveMap
     {
         [HarmonyPrefix]
         //[HarmonyPostfix]
         public static void Patch(Map map)
         {
-            MyLog.Warning($"DeinitAndRemoveMap ST {map} {Find.Maps.Count}", print: self.onDebug);
-
-            if (Find.Maps.Count > 0)
+            MyLog.Warning($"DeinitAndRemoveMap ST",print: self.onDebug);
+            try
             {
-                ruleList.Clear();
-                var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
-                if (aSMapComp == null)
+                MyLog.Warning($"map {map}", print: self.onDebug);
+
+                MyLog.Warning($"Find.Maps.Count {Find.Maps?.Count}", print: self.onDebug);
+
+                if (Find.Maps?.Count > 0)
                 {
-                    MyLog.Error($"DeinitAndRemoveMap ASMapComp NULL");
-                    //return true; // 원래 메서드 실행
+                    var aSMapComp = ASMapComp.GetSingleton(Find.CurrentMap);
+                    if (aSMapComp == null)
+                    {
+                        MyLog.Error($"DeinitAndRemoveMap ASMapComp NULL");
+                        return;
+                    }
+                    MyLog.Warning($"aSMapComp.Rules.Count  {aSMapComp.Rules.Count}", print: self.onDebug);
+                    ruleList.Clear();
+                    foreach (var rule in aSMapComp.EnumerateRules())
+                    {
+                        ruleList.Add(rule.DeepCopy());
+                    }
                 }
-                 MyLog.Warning($"DeinitAndRemoveMap ASMapComp {aSMapComp.Rules.Count}",print: self.onDebug);
-                foreach (var rule in aSMapComp.EnumerateRules())
-                {
-                    ruleList.Add(rule.DeepCopy());
-                }
+            }
+            catch (Exception e)
+            {
+                MyLog.Error(e.ToString());
             }
             MyLog.Warning($"DeinitAndRemoveMap ED", print: self.onDebug);
         }

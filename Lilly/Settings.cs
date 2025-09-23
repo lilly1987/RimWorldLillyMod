@@ -26,7 +26,7 @@ namespace Lilly
 
             new ForbidUtilitySetForbidden();
             new WaterBodyFishMod();
-            //new RWAutoSell_ASMainTabList();
+            new RWAutoSell_Patch();
             new PawnHealthStateDown();
             new ResourcePodGenerate();
             new DrillTurret_LookForNewTarget();
