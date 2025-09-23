@@ -14,6 +14,12 @@ namespace Lilly
         //public static void Error(string text) => Log.Error($"Lilly - {text}");
         //public static void Message(string text) => Log.Message($"Lilly - {text}");
 
+        public static string MyText(string text, string memberName, int lineNumber, string className)
+        {
+            return $"<color=#FFC0FFFF>Lilly</color> <color=#00FF00FF>{className}</color>.<color=#FF8000FF>{memberName}</color> <color=#00FFFFFF>{lineNumber}</color> - {text}";
+        }
+
+
         public static void Warning(string text,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string filePath = "",
@@ -21,10 +27,11 @@ namespace Lilly
             bool print=true
             )
         {
-            if(!print) return;
+            if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            Log.Warning($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
+            Log.Warning(MyText(text, memberName, lineNumber, className));
         }
+
 
         public static void Error(string text,
             [CallerMemberName] string memberName = "",
@@ -34,7 +41,7 @@ namespace Lilly
         {
             if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            Log.Error($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
+            Log.Error(MyText(text, memberName, lineNumber, className));
         }
 
         public static void Message(string text,
@@ -45,7 +52,7 @@ namespace Lilly
         {
             if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            Log.Message($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
+            Log.Message(MyText(text, memberName, lineNumber, className));
         }
 
     }

@@ -23,8 +23,8 @@ namespace Lilly
         //    SetValue();
         //}
 
-        public static int countRangeMin = 8;
-        public static int countRangeMax = 20;
+        public static int countRangeMin = 25;
+        public static int countRangeMax = 100;
 
         static string tmp;
 
