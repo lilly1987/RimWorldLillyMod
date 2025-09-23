@@ -17,8 +17,11 @@ namespace Lilly
         public static void Warning(string text,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string filePath = "",
-            [CallerLineNumber] int lineNumber = 0)
+            [CallerLineNumber] int lineNumber = 0,
+            bool print=true
+            )
         {
+            if(!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
             Log.Warning($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
         }
@@ -26,8 +29,10 @@ namespace Lilly
         public static void Error(string text,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string filePath = "",
-            [CallerLineNumber] int lineNumber = 0)
+            [CallerLineNumber] int lineNumber = 0,
+            bool print = true)
         {
+            if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
             Log.Error($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
         }
@@ -35,8 +40,10 @@ namespace Lilly
         public static void Message(string text,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string filePath = "",
-            [CallerLineNumber] int lineNumber = 0)
+            [CallerLineNumber] int lineNumber = 0,
+            bool print = true)
         {
+            if (!print) return;
             string className = System.IO.Path.GetFileNameWithoutExtension(filePath);
             Log.Message($"Lilly - {className}.{memberName} (Line {lineNumber}) - {text}");
         }
