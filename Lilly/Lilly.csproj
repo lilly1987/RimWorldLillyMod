@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrillCache.cs" />
     <Compile Include="DeepDrill.cs" />
     <Compile Include="DropPodUtilityForceForbid.cs" />
     <Compile Include="ForbidUtilitySetForbidden.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="StockGenerator_BuyAll.cs" />
     <Compile Include="TradeAll.cs" />
-    <Compile Include="WaterBody.cs" />
+    <Compile Include="WaterBodyFishMod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -14,7 +14,7 @@ namespace Lilly
         public static Settings settings;
         public static Action harmonyBase ;
 
-        public bool DebugMode = false;
+        public static bool DebugMode = false;
 
         public Settings()
         {

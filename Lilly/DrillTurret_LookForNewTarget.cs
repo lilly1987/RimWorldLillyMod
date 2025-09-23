@@ -31,6 +31,7 @@ namespace Lilly
         public override void DoSettingsWindowContents(Rect inRect, Listing_Standard listing)
         {
             listing.CheckboxLabeled("DrillTurret 패치".Translate(), ref onPatch, "범위 무제한,공격 배율,".Translate());
+            listing.CheckboxLabeled("디버그".Translate(), ref onDebug, ".".Translate());            
             listing.CheckboxLabeled("시야 무시".Translate(), ref onSight, ".".Translate());            
             ModUI.TextFieldNumeric<float>(listing, ref drillDamage, "드릴 공격력 배율", "");
             listing.GapLine();
@@ -40,7 +41,7 @@ namespace Lilly
         {
             TogglePatch(true);
             Scribe_Values.Look(ref onSight, "onSight", true);
-            Scribe_Values.Look(ref onDebug, "onDebug", true);
+            Scribe_Values.Look(ref onDebug, "onDebug", false);
             Scribe_Values.Look(ref drillDamage, "drillDamage", 1f);
         }
 
@@ -89,13 +90,13 @@ namespace Lilly
             // Prefix 메서드 정의
 
             // 패치 적용
-            MethodInfo prefixMethod = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(Prefix), BindingFlags.Static | BindingFlags.Public);
+            MethodInfo prefixMethod = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(PreLookForNewTarget), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(lookForNewTarget, prefix: new HarmonyMethod(prefixMethod));
 
             MethodInfo prefixMethod2 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(MyisValidTargetAt), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(isValidTargetAt, prefix: new HarmonyMethod(prefixMethod2));
 
-            MethodInfo prefixMethod3 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(Prefix2), BindingFlags.Static | BindingFlags.Public);
+            MethodInfo prefixMethod3 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(PreComputeDrawingParameters), BindingFlags.Static | BindingFlags.Public);
             harmony.Patch(computeDrawingParameters, prefix: new HarmonyMethod(prefixMethod3));
 
             MethodInfo prefixMethod4 = typeof(DrillTurret_LookForNewTarget).GetMethod(nameof(DrillRock), BindingFlags.Static | BindingFlags.Public);
@@ -116,12 +117,12 @@ namespace Lilly
             MyLog.Warning($"___drillDamageAmount : {___drillDamageAmount}");
         }
 
-        public static bool Prefix2()
+        public static bool PreComputeDrawingParameters()
         {
             return false;
         }
 
-        public static bool Prefix(object __instance, out IntVec3 newTargetPosition,ref float ___turretTopRotation,bool ___designatedOnly)
+        public static bool PreLookForNewTarget(object __instance, out IntVec3 newTargetPosition,ref float ___turretTopRotation,bool ___designatedOnly)
         {
             newTargetPosition = IntVec3.Invalid;
 
@@ -139,9 +140,7 @@ namespace Lilly
             var fallback = new List<IntVec3>();
 
             //foreach (var cell in map.AllCells)
-            foreach (var cell in map.listerThings.AllThings
-                .OfType<Building>()
-                .Where(b => b.def.mineable)
+            foreach (var cell in DrillCache.cachedRocks[map]
                 .OrderBy(b => b.Position.DistanceToSquared(position))
                 )
             {

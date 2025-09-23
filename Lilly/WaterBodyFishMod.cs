@@ -12,6 +12,7 @@ using Verse.Noise;
 
 namespace Lilly
 {
+    [HarmonyPatch]
     public class WaterBodyFishMod : HarmonyBase
     {
 
@@ -54,15 +55,29 @@ namespace Lilly
             listing.GapLine();
         }
 
+        //public FishRepeatMode repeatMode = FishRepeatMode.TargetCount;
+        //public FishRepeatMode repeatMode = FishRepeatMode.DoForever;
+
+        public static void AfterConstruct(Zone_Fishing __instance)
+        {
+            __instance.repeatMode = FishRepeatMode.DoForever;
+        }
+
         public override void Patch()
         {
             var original = AccessTools.Method(typeof(WaterBody), "SetFishTypes");
-            var Prefix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.Prefix));
+            var Prefix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.PreSetFishTypes));
             harmony.Patch(original, Prefix);
 
             original = AccessTools.Method(typeof(ScribeLoader), "InitLoading");
-            var postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.Postfix));
+            var postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.PostInitLoading));
             harmony.Patch(original, postfix: postfix);
+
+            var original2 = AccessTools.Constructor(typeof(Zone_Fishing), new[] { typeof(ZoneManager) });
+            postfix = new HarmonyMethod(typeof(WaterBodyFishMod), nameof(WaterBodyFishMod.AfterConstruct));
+            harmony.Patch(original2, postfix: postfix);
+
+            
         }
 
         public override void ExposeData()
@@ -71,13 +86,13 @@ namespace Lilly
             WaterBodyFishMod.All();
         }
 
-        private static void Postfix()
+        public static void PostInitLoading()
         {
             All();
         }
 
-        [HarmonyPrefix]
-        public static bool Prefix(WaterBody __instance)
+        //[HarmonyPrefix]
+        public static bool PreSetFishTypes(WaterBody __instance)
         {
             if (__instance.map.Biome.fishTypes == null)
             {
@@ -143,6 +158,9 @@ namespace Lilly
             //                  def.thingCategories.Contains(ThingCategoryDefOf.Fish))
             //    .ToList();
         }
+
+
+
 
     }
 }

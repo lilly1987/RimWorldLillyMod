@@ -46,7 +46,10 @@ namespace Lilly
 
             listing.Begin(rect);
 
-            listing.CheckboxLabeled("DebugMode", ref settings.DebugMode, "DebugMode.");
+            listing.CheckboxLabeled("DebugMode", ref Settings.DebugMode, ".");
+            listing.GapLine();
+
+            listing.CheckboxLabeled("DrillCache Debug", ref DrillCache.DebugMode, ".");
             listing.GapLine();
 
             MeteoriteMineables.DoSettingsWindowContents(inRect, listing);

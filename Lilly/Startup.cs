@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using HarmonyLib;
+using Verse;
 
 namespace Lilly
 {
@@ -6,9 +7,12 @@ namespace Lilly
     [StaticConstructorOnStartup]
     public static class Startup
     {
+        public static string harmonyId = "Lilly.Startup";
+        public static Harmony harmony;
+
         static Startup()
         {
-            MyLog.Warning($"{nameof(Startup)}.ctor ST {HarmonyBase.allHarmonyBases.Count}");
+            MyLog.Warning($"ST {HarmonyBase.allHarmonyBases.Count}");
             //ModUI.settings = ModUI.modUI.GetSettings<MainSettings>();
 
             //new ForbidUtilitySetForbidden();
@@ -17,12 +21,31 @@ namespace Lilly
             //new PawnHealthStateDown();
             //new ResourcePodGenerate();
             //new DrillTurret_LookForNewTarget();
+
+            if (harmony == null)
+            {
+                MyLog.Warning($"Patch ST");
+                try
+                {
+                    harmony = new Harmony(harmonyId);
+                    harmony.PatchAll();
+                }
+                catch (System.Exception e)
+                {
+                    MyLog.Error($"{harmonyId} Patch Fail");
+                    MyLog.Error(e.ToString());
+                    MyLog.Error($"{harmonyId} Patch Fail");
+                }
+                MyLog.Warning($"Patch ED");
+            }
+
             foreach (var hb in HarmonyBase.allHarmonyBases)
             {
                 hb.OnPatch(true);
             }
 
-            MyLog.Warning($"{nameof(Startup)}.ctor ED");
+
+            MyLog.Warning($"ED");
         }
     }
 
