@@ -55,6 +55,7 @@ namespace Lilly
 
             //
             MeteoriteMineables.ExposeData();
+            DrillCache.ExposeData();
 
             HarmonyBase.exposeData?.Invoke();
 
