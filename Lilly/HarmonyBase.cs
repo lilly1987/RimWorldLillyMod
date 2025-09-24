@@ -21,7 +21,7 @@ namespace Lilly
         public static Action exposeData;
         public static Action<Rect, Listing_Standard> doSettingsWindowContents;
 
-        public static Settings settings;
+        public static LillySettings settings;
         public abstract string label { get;  }
         public virtual string tooltip { get; } = ".";
         public abstract string harmonyId { get;  } 
@@ -33,12 +33,12 @@ namespace Lilly
 
         public HarmonyBase()
         {
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ctor ST {allHarmonyBases.Count}");
             allHarmonyBases.Add(this);
             exposeData += ExposeData;
             doSettingsWindowContents+= DoSettingsWindowContents;
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ctor ED {allHarmonyBases.Count}");
 
         }
@@ -84,7 +84,7 @@ namespace Lilly
             MyLog.Warning($"{harmonyId} Patch ST {Scribe.mode} {force}");
             if (!force && Scribe.mode != LoadSaveMode.Saving)
             {
-                if (Settings.DebugMode)
+                if (LillySettings.DebugMode)
                     MyLog.Warning($"{harmonyId} Patch ED RT");
                 return;
             }
@@ -93,7 +93,7 @@ namespace Lilly
             {
                 //MyLog.Warning($"{harmonyId} Patch ST");
                 Patch();
-                if (Settings.DebugMode)
+                if (LillySettings.DebugMode)
                     MyLog.Warning($"{harmonyId} Patch ED OK");
             }
             catch (Exception e)
@@ -111,11 +111,11 @@ namespace Lilly
             if (harmony == null) return;
             try
             {
-                if (Settings.DebugMode)
+                if (LillySettings.DebugMode)
                     MyLog.Warning($"{harmonyId} UnPatch ST");
                 harmony.UnpatchAll(harmonyId);
                 harmony = null;
-                if (Settings.DebugMode)
+                if (LillySettings.DebugMode)
                     MyLog.Warning($"{harmonyId} UnPatch ED");
             }
             catch (Exception e)

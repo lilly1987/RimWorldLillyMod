@@ -36,11 +36,11 @@ namespace Lilly
         {
             base.DoSettingsWindowContents(inRect, listing);
             
-            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMin, "총 시장가치 최소");
-            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateMax, "총 시장가치 최대");
-            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMin, "포드별 스택 최소");
-            ModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMax, "포드별 스택 최대");
-            ModUI.TextFieldNumeric(listing, ref resourcePodGeneratePodMax, "포드 갯수 최대");
+            LillyModUI.TextFieldNumeric(listing, ref resourcePodGenerateMin, "총 시장가치 최소");
+            LillyModUI.TextFieldNumeric(listing, ref resourcePodGenerateMax, "총 시장가치 최대");
+            LillyModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMin, "포드별 스택 최소");
+            LillyModUI.TextFieldNumeric(listing, ref resourcePodGenerateStackMax, "포드별 스택 최대");
+            LillyModUI.TextFieldNumeric(listing, ref resourcePodGeneratePodMax, "포드 갯수 최대");
             
         }
 

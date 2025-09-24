@@ -13,18 +13,18 @@ using Verse;
 namespace Lilly
 {
     // Mod 다음에 StaticConstructorOnStartup 실행
-    public class ModUI : Mod
+    public class LillyModUI : Mod
     {
-        public static Settings settings; 
-        public static ModUI modUI;
+        public static LillySettings settings; 
+        public static LillyModUI modUI;
 
         // LoadingVars ResolvingCrossRefs PostLoadInit
-        public ModUI(ModContentPack content) : base(content)
+        public LillyModUI(ModContentPack content) : base(content)
         {
             MyLog.Warning($"{this.GetType().Name}.ctor ST");
 
             modUI = this;
-            settings = GetSettings<Settings>();// 주의. MainSettings의 patch가 먼저 실행됨            
+            settings = GetSettings<LillySettings>();// 주의. MainSettings의 patch가 먼저 실행됨            
 
             MyLog.Warning($"{this.GetType().Name}.ctor ED");
         }
@@ -46,10 +46,10 @@ namespace Lilly
 
             listing.Begin(rect);
 
-            listing.CheckboxLabeled("DebugMode", ref Settings.DebugMode, ".");
+            listing.CheckboxLabeled("DebugMode", ref LillySettings.DebugMode, ".");
 
             MeteoriteMineables.DoSettingsWindowContents(inRect, listing);
-            DrillCache.DoSettingsWindowContents(inRect, listing);
+            //DrillCache.DoSettingsWindowContents(inRect, listing);
 
             HarmonyBase.doSettingsWindowContents?.Invoke(inRect, listing);
 

@@ -5,12 +5,12 @@ namespace Lilly
 {
     // Mod 다음에 StaticConstructorOnStartup 실행
     [StaticConstructorOnStartup]
-    public static class Startup
+    public static class LillyStartup
     {
         public static string harmonyId = "Lilly.Startup";
         public static Harmony harmony;
 
-        static Startup()
+        static LillyStartup()
         {
             MyLog.Warning($"ST {HarmonyBase.allHarmonyBases.Count}");
             //ModUI.settings = ModUI.modUI.GetSettings<MainSettings>();

@@ -56,40 +56,34 @@ namespace Lilly
             drillTurretType = AccessTools.TypeByName("Building_DrillTurret");
             if (drillTurretType == null)
             {
-                MyLog.Warning("Building_DrillTurret 타입을 찾을 수 없습니다.");
+                MyLog.Error("Building_DrillTurret 타입을 찾을 수 없습니다.");
                 return;
             }
 
             MethodInfo lookForNewTarget = AccessTools.Method(drillTurretType, "lookForNewTarget",
                 new Type[] { typeof(IntVec3).MakeByRefType() } );
 
-            if (self.onDebug)
-                MyLog.Warning("isValidTargetAt");
+            MyLog.Warning("isValidTargetAt", self.onDebug);
             isValidTargetAt = AccessTools.Method(drillTurretType, "isValidTargetAt", new Type[] { typeof(IntVec3) });
 
-            if (self.onDebug)
-                MyLog.Warning("TargetPosition");
+            
+            MyLog.Warning("TargetPosition", self.onDebug);
             targetPosProp = AccessTools.Field(drillTurretType, "TargetPosition");
 
             // miningMode 필드 추출
-            if (self.onDebug)
-                MyLog.Warning("miningMode");
+            MyLog.Warning("miningMode", self.onDebug);
             miningModeField = AccessTools.Field(drillTurretType, "miningMode");
 
-            if (self.onDebug)
-                MyLog.Warning("laserBeamTexture");
+            MyLog.Warning("laserBeamTexture", self.onDebug);
             laserTextureField = AccessTools.Field(drillTurretType, "laserBeamTexture");
 
-            if (self.onDebug)
-                MyLog.Warning("computeDrawingParameters");
+            MyLog.Warning("computeDrawingParameters", self.onDebug);
             MethodInfo computeDrawingParameters = AccessTools.Method(drillTurretType, "computeDrawingParameters", new Type[] { });
 
-            if (self.onDebug)
-                MyLog.Warning("drillRock");
+            MyLog.Warning("drillRock", self.onDebug);
             MethodInfo drillRock = AccessTools.Method(drillTurretType, "drillRock", new Type[] { });
 
-            if (self.onDebug)
-                MyLog.Warning("end");
+            MyLog.Warning("end", self.onDebug);
 
             if (lookForNewTarget == null || isValidTargetAt == null || targetPosProp == null || computeDrawingParameters==null|| drillRock == null)
             {
@@ -217,17 +211,32 @@ namespace Lilly
                 __result = false;
                 return false;
             }
-            if (___designatedOnly && map.designationManager.DesignationAt(position, DesignationDefOf.Mine) == null)
+            if (___designatedOnly && 
+                map.designationManager.DesignationAt(position, DesignationDefOf.Mine) == null 
+                //&& map.designationManager.DesignationAt(position, DesignationDefOf.Deconstruct) == null                 
+                )
             {
                 __result = false;
                 return false;
             }
+
             Building edifice = position.GetEdifice(map);
-            if (edifice == null || !edifice.def.mineable)
+            if (edifice == null)
             {
                 __result = false;
                 return false;
             }
+
+            // 적대 건물 허용
+            //bool isHostileStructure = edifice.Faction != null && edifice.Faction.HostileTo(Faction.OfPlayer);
+
+            //if (!edifice.def.mineable && !isHostileStructure)
+            if (!edifice.def.mineable )
+            {
+                __result = false;
+                return false;
+            }
+
             // 여기부터 마무리가 필요해
             if (edifice.def.building.isResourceRock)
             {

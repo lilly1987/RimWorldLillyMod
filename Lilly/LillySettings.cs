@@ -9,17 +9,17 @@ using Verse;
 
 namespace Lilly
 {
-    public class Settings : ModSettings
+    public class LillySettings : ModSettings
     {
-        public static Settings settings;
+        public static LillySettings settings;
         public static Action harmonyBase ;
 
         public static bool DebugMode = true;
 
-        public Settings()
+        public LillySettings()
         {
             Scribe_Values.Look(ref DebugMode, "DebugMode", false);
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ctor ST");
             settings = this;
             HarmonyBase.settings = settings;
@@ -29,9 +29,9 @@ namespace Lilly
             //new RWAutoSell_Patch();
             //new PawnHealthStateDown();
             new ResourcePodGenerate();
-            new DrillTurret_LookForNewTarget();
+            //new DrillTurret_LookForNewTarget();
 
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ctor ED");
         }
 
@@ -39,13 +39,13 @@ namespace Lilly
         {
             base.ExposeData();
 
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ST");
 
             //if (Scribe.mode != LoadSaveMode.LoadingVars && Scribe.mode != LoadSaveMode.Saving)
             if (Scribe.mode != LoadSaveMode.LoadingVars && Scribe.mode != LoadSaveMode.Saving)
             {
-                if (Settings.DebugMode)
+                if (LillySettings.DebugMode)
                     MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ED RT");
                 return;
             }
@@ -55,11 +55,11 @@ namespace Lilly
 
             //
             MeteoriteMineables.ExposeData();
-            DrillCache.ExposeData();
+            //DrillCache.ExposeData();
 
             HarmonyBase.exposeData?.Invoke();
 
-            if (Settings.DebugMode)
+            if (LillySettings.DebugMode)
                 MyLog.Warning($"{this.GetType().Name}.ExposeData {Scribe.mode} ED OK");
         }
 
