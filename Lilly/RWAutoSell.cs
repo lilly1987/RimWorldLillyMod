@@ -46,7 +46,7 @@ public class RWAutoSell_Patch : HarmonyBase
     //    listing.GapLine();
     //}
 
-    [HarmonyPatch(typeof(SavedGameLoaderNow), nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow))]
+    //[HarmonyPatch(typeof(SavedGameLoaderNow), nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow))]// ok
     public static class Patch_LoadGame
     {
         [HarmonyPostfix]
@@ -69,7 +69,7 @@ public class RWAutoSell_Patch : HarmonyBase
         }
     }
 
-    [HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapGenerated))]
+    //[HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapGenerated))]//ok
     public static class Patch_MapGenerated
     {
         [HarmonyPostfix]
@@ -113,7 +113,7 @@ public class RWAutoSell_Patch : HarmonyBase
         }
     }
 
-    [HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapRemoved))]
+    //[HarmonyPatch(typeof(ASMapComp), nameof(ASMapComp.MapRemoved))]//ok
     public static class MapRemoved
     {
         [HarmonyPrefix]

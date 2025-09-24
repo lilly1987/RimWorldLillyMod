@@ -14,7 +14,7 @@ namespace Lilly
         public static Settings settings;
         public static Action harmonyBase ;
 
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         public Settings()
         {
@@ -26,7 +26,7 @@ namespace Lilly
 
             new ForbidUtilitySetForbidden();
             new WaterBodyFishMod();
-            new RWAutoSell_Patch();
+            //new RWAutoSell_Patch();
             //new PawnHealthStateDown();
             new ResourcePodGenerate();
             new DrillTurret_LookForNewTarget();
