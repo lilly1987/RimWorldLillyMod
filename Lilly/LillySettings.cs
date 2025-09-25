@@ -28,7 +28,7 @@ namespace Lilly
             new WaterBodyFishMod();
             //new RWAutoSell_Patch();
             //new PawnHealthStateDown();
-            new ResourcePodGenerate();
+            //new ResourcePodGenerate();
             //new DrillTurret_LookForNewTarget();
 
             if (LillySettings.DebugMode)
@@ -54,7 +54,7 @@ namespace Lilly
             Scribe_Values.Look(ref DebugMode, "DebugMode", false);
 
             //
-            MeteoriteMineables.ExposeData();
+            //MeteoriteMineables.ExposeData();
             //DrillCache.ExposeData();
 
             HarmonyBase.exposeData?.Invoke();

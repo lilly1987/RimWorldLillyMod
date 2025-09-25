@@ -80,9 +80,7 @@
     <Compile Include="MyHarmony.cs" />
     <Compile Include="MyLog.cs" />
     <Compile Include="LillySettings.cs" />
-    <Compile Include="MeteoriteMineables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourcePodGenerate.cs" />
     <Compile Include="LillyStartup.cs" />
     <Compile Include="StockGenerator_BuyAll.cs" />
     <Compile Include="TradeAll.cs" />

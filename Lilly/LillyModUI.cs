@@ -48,7 +48,7 @@ namespace Lilly
 
             listing.CheckboxLabeled("DebugMode", ref LillySettings.DebugMode, ".");
 
-            MeteoriteMineables.DoSettingsWindowContents(inRect, listing);
+            //MeteoriteMineables.DoSettingsWindowContents(inRect, listing);
             //DrillCache.DoSettingsWindowContents(inRect, listing);
 
             HarmonyBase.doSettingsWindowContents?.Invoke(inRect, listing);

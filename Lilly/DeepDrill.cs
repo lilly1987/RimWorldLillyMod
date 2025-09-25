@@ -107,44 +107,7 @@ namespace Lilly
         //)]
         public static class Patch_DeepDrillUtility_GetNextResource
         {
-            //[HarmonyTranspiler]
-            //    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            //    {
-            //        var codes = new List<CodeInstruction>(instructions);
-            //        var newCodes = new List<CodeInstruction>();
 
-            //        for (int i = 0; i < codes.Count; i++)
-            //        {
-            //            var instruction = codes[i];
-
-            //            // 🔁 1. 정수 리터럴 21을 찾아서 LillyMod.cnt로 변경
-            //            if (instruction.opcode == OpCodes.Ldc_I4 && instruction.operand is int value && value == 21)
-            //            {
-            //                instruction.operand = LillyMod.cnt;
-            //                MyLog.Warning("LillyMod radius patched to " + LillyMod.cnt + "");
-            //                newCodes.Add(instruction);
-            //                continue;
-            //            }
-
-            //            // 🔁 2. intVec.InBounds(map) 조건 제거
-            //            if (i + 2 < codes.Count &&
-            //                codes[i].opcode == OpCodes.Ldloc_1 && // intVec
-            //                codes[i + 1].opcode == OpCodes.Ldarg_1 && // map
-            //                codes[i + 2].Calls(typeof(IntVec3).GetMethod("InBounds")))
-            //            {
-            //                // 조건 제거: InBounds 호출 제거 후 항상 true 처리
-            //                MyLog.Warning("LillyMod removed InBounds check");
-            //                newCodes.Add(new CodeInstruction(OpCodes.Ldc_I4_1)); // push true
-            //                i += 2; // skip original InBounds call
-            //                continue;
-            //            }
-
-            //            // 기본적으로 기존 명령어 유지
-            //            newCodes.Add(instruction);
-            //        }
-
-            //        return newCodes;
-            //    }
 
             [HarmonyTranspiler]
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
