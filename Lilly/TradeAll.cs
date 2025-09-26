@@ -110,7 +110,7 @@ namespace Lilly
 
         public override string SettingsCategory()
         {
-            return "LetsSellModApparel".Translate();
+            return "Lets Sell Mod Apparel".Translate();
         }
     }
 }

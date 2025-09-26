@@ -76,6 +76,7 @@
     <Compile Include="DropPodUtilityForceForbid.cs" />
     <Compile Include="ForbidUtilitySetForbidden.cs" />
     <Compile Include="HarmonyBase.cs" />
+    <Compile Include="Harmonyx.cs" />
     <Compile Include="LillyModUI.cs" />
     <Compile Include="MyHarmony.cs" />
     <Compile Include="MyLog.cs" />
