@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Lilly
 {
-    public class Harmonyx : Harmony
+    public class HarmonyX : Harmony
     {
 
-        public Harmonyx(string id) : base(id)
+        public HarmonyX(string id) : base(id)
         {
         }
 
@@ -65,7 +65,41 @@ namespace Lilly
                     method.GetCustomAttribute<HarmonyFinalizer>()==null ? null: to
                     );
                 MyLog.Message($"패치 성공: {targetType}.{targetMethodName} <- {method.DeclaringType}.{method.Name}");
-            }            
+            }
+        }
+        public void UnPatchAll(Type type)
+        {
+            foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                var patchAttr = method.GetCustomAttribute<HarmonyPatch>();
+                if (patchAttr == null) continue;
+
+                var targetType = patchAttr.info?.declaringType;
+                var targetMethodName = patchAttr.info?.methodName;
+                var argumentTypes = patchAttr.info?.argumentTypes;
+
+                if (targetType == null || string.IsNullOrEmpty(targetMethodName))
+                {
+                    MyLog.Error($"패치 정보 누락: {method.Name}");
+                    continue;
+                }
+
+                var original = AccessTools.Method(targetType, targetMethodName, argumentTypes);
+                if (original == null)
+                {
+                    MyLog.Error($"원본 메서드 찾기 실패: {targetType}.{targetMethodName}");
+                    continue;
+                }
+
+                // 해당 메서드에 적용된 패치 중 내 Harmony ID로 된 것만 제거
+                base.Unpatch(original, HarmonyPatchType.Prefix, Id);
+                base.Unpatch(original, HarmonyPatchType.Postfix, Id);
+                base.Unpatch(original, HarmonyPatchType.Transpiler, Id);
+                base.Unpatch(original, HarmonyPatchType.Finalizer, Id);
+
+                MyLog.Message($"패치 해제됨: {targetType}.{targetMethodName} <- {method.DeclaringType}.{method.Name}");
+            }
+
         }
 
         public MethodInfo Patch(HarmonyPatchType harmonyPatchType, Type typePatch, string namePatch,Type typeOriginal, string nameOriginal, Type[] parameters = null, Type[] generics = null)
