@@ -25,7 +25,7 @@ namespace Lilly
             HarmonyBase.settings = settings;
 
             new ForbidUtilitySetForbidden();
-            new WaterBodyFishMod();
+            //new WaterBodyFishMod();
             //new RWAutoSell_Patch();
             //new PawnHealthStateDown();
             //new ResourcePodGenerate();

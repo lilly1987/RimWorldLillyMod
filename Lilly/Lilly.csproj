@@ -85,7 +85,6 @@
     <Compile Include="LillyStartup.cs" />
     <Compile Include="StockGenerator_BuyAll.cs" />
     <Compile Include="TradeAll.cs" />
-    <Compile Include="WaterBodyFishMod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
