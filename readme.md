@@ -1,18 +1,49 @@
-���־� ��Ʃ��� �ٿ�  
-https://visualstudio.microsoft.com/ko/downloads/  
-  
-dnspy �ٿ�  
-https://dnspy.org/  
+# Lilly RimWorld Mod
 
-���־� ��Ʃ��� �⺻ ȯ�� ����  
-https://rimworldwiki.com/wiki/Modding_Tutorials/Setting_up_a_solution  
-  
-Hello World ��� �����  
-https://rimworldwiki.com/wiki/Modding_Tutorials/Hello_World  
-  
-HarmonyX �� ���־� ��Ʃ��� ��� �޴����� '���� > NuGet ��Ű�� ������ > �ַ�ǿ� ��Ű�� ����' Ŭ��  
-�O�ƺ��⿡�� HarmonyX �˻� �� ��ġ  
-  
-HarmonyX ����  
-https://github.com/BepInEx/HarmonyX/wiki/Patching-with-Harmony  
+림월드 모딩을 연습하며 만든 여러 기능과 Harmony 패치를 모아 둔 프로젝트입니다. 오래된 실험 코드가 포함되어 있으므로, 아래 기능 설명은 현재 프로젝트 설정과 코드에서 확인되는 내용을 기준으로 합니다. 게임 버전별 호환성과 실제 게임 내 동작은 별도로 확인해야 합니다.
 
+## 기능
+
+### 금지 상태 자동 해제
+
+`ForbidUtility.SetForbidden` 호출에서 금지 여부를 항상 해제하도록 패치합니다. 따라서 이 메서드를 통해 처리되는 아이템은 금지 상태가 되지 않도록 동작합니다.
+
+현재 코드에는 설정 화면에 패치 사용 여부 체크박스가 있지만, 체크 상태에 따라 패치를 적용하거나 해제하는 처리는 연결되어 있지 않습니다. 체크박스 표시만으로 기능을 끄고 켤 수 있다고 가정하지 마세요.
+
+### 의류 및 무기 거래 태그 보완
+
+게임의 의류와 무기 정의 중 거래 태그가 없거나 상인 거래 대상으로 분류되지 않은 일부 항목에 거래 태그를 추가합니다. 의류는 `Clothing`, 무기는 `WeaponRanged` 태그를 부여해 상인 거래 목록에 포함되도록 시도합니다.
+
+- 의류 판매 가격 계수 기본값: `0.75`
+- 무기 판매 가격 계수: `0.2`
+- 의류 판매 가격 계수는 `Lets Sell Mod Apparel` 설정에서 `0`~`2` 범위로 조절할 수 있습니다.
+- 코드 안내상 가격 설정 변경은 게임 재시작이 필요합니다.
+
+이미 다른 거래 태그를 가진 의류와 무기에는 무조건 태그를 덧붙이지 않습니다.
+
+### 심층 드릴 패치 실험
+
+심층 드릴의 자원 생산 메서드에 있는 정수 상수 `21`을 `20,000`으로 바꾸는 Harmony 패치가 포함되어 있습니다. 이 값 변경이 실제 생산량에 미치는 영향은 게임 버전과 메서드 구현에 따라 달라질 수 있으며, 충분한 테스트 없이 사용하지 않는 것을 권장합니다.
+
+## 현재 빌드에서 비활성인 예전 코드
+
+다음 기능의 소스 파일은 저장소에 남아 있지만, 현재 프로젝트 파일(`Lilly.csproj`)의 빌드 대상에는 포함되어 있지 않습니다. 따라서 현재 빌드에서 작동하는 기능으로 간주하지 마세요.
+
+- 물고기 종류와 최대 개체 수 조정
+- 적 인간형 폰을 쓰러뜨렸을 때 포획 지정을 추가하는 패치
+- 자원 낙하 포드 생성량 조정
+
+프로젝트에는 `StockGenerator_BuyAll` 코드도 있지만, 이를 상인 정의에 연결하는 설정이나 정의 파일은 확인되지 않습니다.
+
+## 설정
+
+모드 설정 화면에서 `- Lill_Mod` 항목을 확인하세요. 일부 설정 UI는 남아 있어도 패치의 실제 활성화·비활성화 동작과 연결되지 않을 수 있습니다.
+
+## 개발 참고 자료
+
+- Visual Studio 다운로드: <https://visualstudio.microsoft.com/ko/downloads/>
+- RimWorld 모딩 개발 환경 설정: <https://rimworldwiki.com/wiki/Modding_Tutorials/Setting_up_a_solution>
+- Hello World 모드 만들기: <https://rimworldwiki.com/wiki/Modding_Tutorials/Hello_World>
+- Harmony 패치 참고: <https://github.com/BepInEx/HarmonyX/wiki/Patching-with-Harmony>
+
+기존 안내에는 dnSpy 및 HarmonyX 설치 안내도 있었지만, 이 프로젝트가 사용하는 Harmony 라이브러리와 게임 버전에 맞는 개발 환경을 별도로 확인하세요.
